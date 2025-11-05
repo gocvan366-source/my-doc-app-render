@@ -3,6 +3,7 @@ const cors = require('cors');
 const https = require('https');
 const PizZip = require('pizzip');
 const Docxtemplater = require('docxtemplater');
+const path = require('path'); // Dùng để phục vụ tệp app.html
 
 const app = express();
 const PORT = process.env.PORT || 3000; // Render sẽ tự động cung cấp biến process.env.PORT
@@ -68,10 +69,10 @@ app.post('/generate-docx', async (req, res) => {
     }
 });
 
-// --- 3. Route kiểm tra sức khỏe (Health Check) ---
-// Render dùng cái này để biết máy chủ của bạn đã sẵn sàng
+// --- 3. Route phục vụ APP.HTML (Frontend) ---
+// Gửi tệp app.html khi người dùng truy cập URL gốc
 app.get('/', (req, res) => {
-    res.send('Backend tạo DOCX đang chạy!');
+    res.sendFile(path.join(__dirname, 'app.html'));
 });
 
 // --- 4. Khởi động Máy chủ ---
