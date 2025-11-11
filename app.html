@@ -99,6 +99,36 @@
             font-weight: 600;
             color: #374151; /* text-gray-700 */
         }
+        /* Style cho bảng ID11 (MỚI) */
+        #profile_id11_table table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-bottom: 1rem;
+        }
+        #profile_id11_table th, #profile_id11_table td { 
+            border: 1px solid #ddd; 
+            padding: 8px; 
+            text-align: left; 
+            font-size: 0.875rem;
+            vertical-align: top;
+        }
+        #profile_id11_table th { 
+            background-color: #f4f5f7; 
+            font-weight: 600;
+        }
+        #profile_id11_table td:nth-child(1) { /* STT */
+            width: 50px;
+            text-align: center;
+        }
+        #profile_id11_table td:nth-child(3), /* Bản gốc */
+        #profile_id11_table td:nth-child(4) { /* Bản sao */
+            width: 70px;
+            text-align: center;
+            font-size: 1.25rem; /* Làm cho checkbox to hơn */
+        }
+        #profile_id11_table td:nth-child(5) { /* Ghi chú */
+            width: 100px;
+        }
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen p-4 md:p-8">
@@ -158,6 +188,8 @@
                         <option value="https://raw.githubusercontent.com/gocvan366-source/Autodoc/refs/heads/main/BBDG%20CSH.docx">BBĐG</option>
                         <option value="https://raw.githubusercontent.com/gocvan366-source/Autodoc/refs/heads/main/BBDG%203%20B%C3%8AN.docx">BBĐG 3 Bên</option>
                         <option value="https://raw.githubusercontent.com/gocvan366-source/Autodoc/refs/heads/main/HoSoTSBD_T%E1%BB%9D%20tr%C3%ACnh%20th%E1%BA%A9m%20%C4%91%E1%BB%8Bnh%20TSB%C4%90%20(kh%C3%B4ng%20qua%20AMC)_2025-11-10.docx">Tờ trình thẩm định TSĐB (không qua AMC)</option>
+                        <option value="https://raw.githubusercontent.com/gocvan366-source/Autodoc/refs/heads/main/HoSoTSBD_%C4%90%C4%83ng%20%C4%91%C4%83ng%20k%C3%BD%20th%E1%BA%BF%20ch%E1%BA%A5p_2025-11-11.docx">ĐƠN ĐĂNG KÝ THẾ CHẤP</option>
+                        <option value="https://raw.githubusercontent.com/gocvan366-source/Autodoc/refs/heads/main/HoSoTSBD_Bi%C3%AAn%20b%E1%BA%A3n%20giao%20nh%E1%BA%ADn%20h%E1%BB%93%20s%C6%A1%20TSB%C4%90_2025-11-11.docx">Biên bản giao nhận</option>
                     </select>
                     <button id="btn_generate_docx" class="w-full md:w-auto bg-blue-600 text-white font-bold py-2 px-5 rounded-lg hover:bg-blue-700 transition duration-300">
                         Tạo DOCX
@@ -285,6 +317,26 @@
                 <textarea id="profile_id8" class="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" readonly rows="4"></textarea>
             </section>
 
+            <!-- SECTION 11: ID9 (NEW) -->
+            <section class="p-4 border rounded-lg bg-gray-50 mt-4">
+                <label for="profile_id9" class="block text-sm font-semibold text-gray-700">11. ID9 (Tự động tổng hợp chi tiết QSDĐ)</label>
+                <textarea id="profile_id9" class="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" readonly rows="15"></textarea>
+            </section>
+
+            <!-- SECTION 12: ID10 (NEW) -->
+            <section class="p-4 border rounded-lg bg-gray-50 mt-4">
+                <label for="profile_id10" class="block text-sm font-semibold text-gray-700">12. ID10 (Tự động tổng hợp TS Gắn liền với đất)</label>
+                <textarea id="profile_id10" class="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" readonly rows="15"></textarea>
+            </section>
+
+            <!-- SECTION 13: ID11 (MỚI) -->
+            <section class="p-4 border rounded-lg bg-gray-50 mt-4">
+                <label for="profile_id11_table" class="block text-sm font-semibold text-gray-700">13. ID11 (Bảng hồ sơ bàn giao)</label>
+                <div id="profile_id11_table" class="mt-4 table-container">
+                    <!-- Bảng ID11 sẽ được chèn vào đây -->
+                </div>
+            </section>
+
         </div>
 
         <!-- PAGE 3: VALUATION VIEW (Initially Hidden) -->
@@ -361,6 +413,16 @@
                     <input type="text" id="bank_tt6" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-100" readonly>
                 </div>
                 <!-- KẾT THÚC THÊM MỚI -->
+                <!-- BẮT ĐẦU TT7 & TT8 -->
+                <div>
+                    <label for="bank_tt7" class="block text-sm font-medium text-gray-700">TT7 (Đơn vị (đầy đủ))</label>
+                    <textarea id="bank_tt7" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-100" readonly rows="3"></textarea>
+                </div>
+                <div>
+                    <label for="bank_tt8" class="block text-sm font-medium text-gray-700">TT8 (Mã số thuế)</label>
+                    <input type="text" id="bank_tt8" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-100" readonly>
+                </div>
+                <!-- KẾT THÚC TT7 & TT8 -->
             </div>
             <div class="mt-6 flex justify-end">
                 <button id="btn_save_bank_info" class="bg-blue-600 text-white font-bold py-2 px-5 rounded-lg hover:bg-blue-700 transition duration-300">
@@ -466,6 +528,10 @@
             const bankTT5 = document.getElementById('bank_tt5');
             const bankTT6 = document.getElementById('bank_tt6');
             // KẾT THÚC THÊM MỚI
+            // BẮT ĐẦU TT7 & TT8
+            const bankTT7 = document.getElementById('bank_tt7');
+            const bankTT8 = document.getElementById('bank_tt8');
+            // KẾT THÚC TT7 & TT8
 
             // --- NEW: Confirmation Modal Elements ---
             const modalConfirm = document.getElementById('modal_confirm');
@@ -511,8 +577,12 @@
                     tt4: "Điện thoại : 02723 845 046",
                     // BẮT ĐẦU THÊM MỚI
                     tt5: "PGD Tân Thạnh",
-                    tt6: "Lãnh đạo PGD Tân Thạnh"
+                    tt6: "Lãnh đạo PGD Tân Thạnh",
                     // KẾT THÚC THÊM MỚI
+                    // BẮT ĐẦU TT7 & TT8
+                    tt7: "NGÂN HÀNG TMCP CÔNG THƯƠNG VIỆT NAM – CHI NHÁNH LONG AN - PGD TÂN THẠNH",
+                    tt8: "0100111948-034-1"
+                    // KẾT THÚC TT7 & TT8
                 },
                 "Hội sở": {
                     tt2: "Ngân Hàng Thương Mại Cổ Phần Công Thương Việt Nam – Chi Nhánh Long An",
@@ -520,8 +590,12 @@
                     tt4: "Điện thoại : 02723 845 046",
                     // BẮT ĐẦU THÊM MỚI
                     tt5: "CN Long An",
-                    tt6: "Ban giám đốc chi nhánh Long An"
+                    tt6: "Ban giám đốc chi nhánh Long An",
                     // KẾT THÚC THÊM MỚI
+                    // BẮT ĐẦU TT7 & TT8
+                    tt7: "NGÂN HÀNG TMCP CÔNG THƯƠNG VIỆT NAM – CHI NHÁNH LONG AN",
+                    tt8: "0100111948-034"
+                    // KẾT THÚC TT7 & TT8
                 }
             };
 
@@ -537,7 +611,7 @@
                 allProfiles.forEach(profile => {
                     if (!profile.bankInfo) {
                         // SỬA ĐỔI: Thêm tt5, tt6 vào đối tượng mặc định
-                        profile.bankInfo = { tt1: '', tt2: '', tt3: '', tt4: '', tt5: '', tt6: '' };
+                        profile.bankInfo = { tt1: '', tt2: '', tt3: '', tt4: '', tt5: '', tt6: '', tt7: '', tt8: '' };
                     }
                     // BẮT ĐẦU THÊM MỚI: Fix các bankInfo cũ thiếu trường
                     else {
@@ -547,6 +621,14 @@
                         if (profile.bankInfo.tt6 === undefined) {
                             profile.bankInfo.tt6 = '';
                         }
+                        // BẮT ĐẦU TT7 & TT8
+                        if (profile.bankInfo.tt7 === undefined) {
+                            profile.bankInfo.tt7 = '';
+                        }
+                        if (profile.bankInfo.tt8 === undefined) {
+                            profile.bankInfo.tt8 = '';
+                        }
+                        // KẾT THÚC TT7 & TT8
                     }
                     // KẾT THÚC THÊM MỚI
                     if (profile.valuation_d1 === undefined) { // Check for undefined
@@ -613,6 +695,9 @@
                 updateGeneratedId6Field(); // Tự động tạo ID6
                 updateGeneratedId7Field(); // Tự động tạo ID7 (MỚI)
                 updateGeneratedId8Field(); // Tự động tạo ID8 (MỚI)
+                updateGeneratedId9Field(); // Tự động tạo ID9 (MỚI)
+                updateGeneratedId10Field(); // Tự động tạo ID10 (MỚI)
+                updateGeneratedId11Field(); // Tự động tạo ID11 (MỚI)
             }
 
             // --- Page Navigation Logic ---
@@ -630,7 +715,7 @@
                     sdt: sdt,
                     customers: [],
                     qsddRecords: [],
-                    bankInfo: { tt1: '', tt2: '', tt3: '', tt4: '' },
+                    bankInfo: { tt1: '', tt2: '', tt3: '', tt4: '', tt5: '', tt6: '', tt7: '', tt8: '' }, // Sửa lỗi thiếu TT5, TT6 và thêm TT7, TT8
                     valuation_d1: '', // Add this
                     valuation_d2: '', // Add this
                     // ID 1-5 đều tự động, không cần khởi tạo
@@ -677,6 +762,15 @@
                 // Clear ID8 (MỚI)
                 document.getElementById('profile_id8').value = '';
                 
+                // Clear ID9 (MỚI)
+                document.getElementById('profile_id9').value = '';
+                
+                // Clear ID10 (MỚI)
+                document.getElementById('profile_id10').value = '';
+
+                // Clear ID11 (MỚI)
+                document.getElementById('profile_id11_table').innerHTML = '';
+
                 // Clear bank info modal
                 bankTT1.value = '';
                 bankTT2.value = '';
@@ -686,6 +780,10 @@
                 bankTT5.value = '';
                 bankTT6.value = '';
                 // KẾT THÚC THÊM MỚI
+                // BẮT ĐẦU TT7 & TT8
+                bankTT7.value = '';
+                bankTT8.value = '';
+                // KẾT THÚC TT7 & TT8
 
                 currentProfileId = null;
 
@@ -761,7 +859,7 @@
 
                 // Load data from profile into modal
                 // SỬA ĐỔI: Thêm tt5, tt6 vào đối tượng mặc định
-                const info = profile.bankInfo || { tt1: '', tt2: '', tt3: '', tt4: '', tt5: '', tt6: '' };
+                const info = profile.bankInfo || { tt1: '', tt2: '', tt3: '', tt4: '', tt5: '', tt6: '', tt7: '', tt8: '' };
                 bankTT1.value = info.tt1;
                 bankTT2.value = info.tt2;
                 bankTT3.value = info.tt3;
@@ -770,6 +868,10 @@
                 bankTT5.value = info.tt5;
                 bankTT6.value = info.tt6;
                 // KẾT THÚC THÊM MỚI
+                // BẮT ĐẦU TT7 & TT8
+                bankTT7.value = info.tt7;
+                bankTT8.value = info.tt8;
+                // KẾT THÚC TT7 & TT8
 
                 modalBankInfo.classList.add('is-visible');
             }
@@ -789,6 +891,10 @@
                     bankTT5.value = data.tt5;
                     bankTT6.value = data.tt6;
                     // KẾT THÚC THÊM MỚI
+                    // BẮT ĐẦU TT7 & TT8
+                    bankTT7.value = data.tt7;
+                    bankTT8.value = data.tt8;
+                    // KẾT THÚC TT7 & TT8
                 } else {
                     bankTT2.value = '';
                     bankTT3.value = '';
@@ -797,6 +903,10 @@
                     bankTT5.value = '';
                     bankTT6.value = '';
                     // KẾT THÚC THÊM MỚI
+                    // BẮT ĐẦU TT7 & TT8
+                    bankTT7.value = '';
+                    bankTT8.value = '';
+                    // KẾT THÚC TT7 & TT8
                 }
             });
 
@@ -817,8 +927,12 @@
                     tt4: bankTT4.value,
                     // BẮT ĐẦU THÊM MỚI
                     tt5: bankTT5.value,
-                    tt6: bankTT6.value
+                    tt6: bankTT6.value,
                     // KẾT THÚC THÊM MỚI
+                    // BẮT ĐẦU TT7 & TT8
+                    tt7: bankTT7.value,
+                    tt8: bankTT8.value
+                    // KẾT THÚC TT7 & TT8
                 };
                 
                 saveAllProfilesToStorage();
@@ -849,8 +963,22 @@
                     const kh4 = profile.customers[3] || {};
                     // --- KẾT THÚC CHỈNH SỬA ---
 
+                    // --- BẮT ĐẦU THÊM MỚI: Dữ liệu cho ID11 ---
+                    const id11Data = (profile.qsddRecords || []).map((record, index) => {
+                        const tenGCN = (record.ten_gcn ? record.ten_gcn.toLowerCase() : '[Chưa có tên GCN]');
+                        const soGCN = record.so_gcn || '[Chưa có số GCN]';
+                        return {
+                            stt: index + 1,
+                            danhMuc: `Giấy chứng nhận ${tenGCN} Số ${soGCN}`,
+                            banGoc: '☑',
+                            banSao: '☐',
+                            ghiChu: '1 bản'
+                        };
+                    });
+                    // --- KẾT THÚC THÊM MỚI ---
+
                     // --- ADD: Định dạng D1 cho DOCX ---
-                    const d1ValueForDocx = parseFloat(profile.valuation_d1) || 0;
+                    // BỎ SỐ THÔ: const d1ValueForDocx = parseFloat(profile.valuation_d1) || 0;
                     // --- END ADD ---
 
                     const data = {
@@ -859,13 +987,27 @@
                         ID3: document.getElementById('profile_id3').value,
                         ID4: document.getElementById('profile_id4').value,
                         ID5: document.getElementById('profile_id5').value,
+                        // --- START: SỬA LỖI ĐỊNH DẠNG SỐ (THEO YÊU CẦU MỚI: GỬI TEXT) ---
+                        // Gửi TỔNG GIÁ TRỊ LÀM TRÒN (ID6_VALUE) dưới dạng VĂN BẢN ĐỊNH DẠNG
                         ID6_VALUE: document.getElementById('id6_total_value').textContent,
+                        // --- END: SỬA LỖI ĐỊNH DẠNG SỐ ---
                         ID6_TEXT: document.getElementById('id6_total_text').textContent,
                         // BẮT ĐẦU THÊM MỚI (ID7, ID8)
                         ID7: document.getElementById('profile_id7').value,
                         ID8: document.getElementById('profile_id8').value,
                         // KẾT THÚC THÊM MỚI (ID7, ID8)
-                        D1: d1ValueForDocx > 0 ? formatter.format(d1ValueForDocx) : '', // --- MODIFIED ---
+                        // BẮT ĐẦU THÊM MỚI (ID9)
+                        ID9: document.getElementById('profile_id9').value,
+                        // KẾT THÚC THÊM MỚI (ID9)
+                        // BẮT ĐẦU THÊM MỚI (ID10)
+                        ID10: document.getElementById('profile_id10').value,
+                        // KẾT THÚC THÊM MỚI (ID10)
+                        
+                        // --- BẮT ĐẦU THÊM MỚI: Thêm ID11 vào data object ---
+                        ID11_TABLE: id11Data,
+                        // --- KẾT THÚC THÊM MỚI ---
+
+                        D1: profile.valuation_d1 || '', // --- MODIFIED: Gửi text đã định dạng ---
                         D2: profile.valuation_d2 || '', // --- ADD THIS ---
                         TT2: profile.bankInfo.tt2 || '',
                         TT3: profile.bankInfo.tt3 || '',
@@ -874,6 +1016,10 @@
                         TT5: profile.bankInfo.tt5 || '',
                         TT6: profile.bankInfo.tt6 || '',
                         // KẾT THÚC THÊM MỚI
+                        // BẮT ĐẦU TT7 & TT8
+                        TT7: profile.bankInfo.tt7 || '',
+                        TT8: profile.bankInfo.tt8 || '',
+                        // KẾT THÚC TT7 & TT8
                         // Thêm các trường khác nếu mẫu của bạn cần
                         // Ví dụ: Tên hồ sơ, SĐT
                         HO_TEN_HS: profile.hoTen,
@@ -931,8 +1077,9 @@
                         
                         // --- KẾT THÚC CHỈNH SỬA ---
                         
-                        // --- START: LOGIC NHÓM BẢNG ID6 ---
+                        // --- START: LOGIC NHÓM BẢNG ID6 (THEO YÊU CẦU MỚI: GỬI TEXT) ---
                         ID6_GROUPS: (profile.valuationData || []).reduce((acc, row) => {
+                            // Vẫn tính toán bằng số thô
                             const dien_tich = parseFloat(row.dien_tich) || 0;
                             const don_gia = parseFloat(row.don_gia) || 0;
                             const clcl_percent = parseFloat(row.clcl) || 100;
@@ -942,16 +1089,16 @@
                             const lam_tron = Math.floor(thanh_tien / 1000000) * 1000000;
                             const gt_cho_vay = lam_tron * (boa_percent / 100);
 
-                            // Định dạng dữ liệu hàng
+                            // Định dạng dữ liệu hàng (GỬI DẠNG VĂN BẢN)
                             const rowData = {
                                 loaiDat: row.loaiDat,
-                                dien_tich: formatter.format(dien_tich),
-                                don_gia: formatter.format(don_gia),
+                                dien_tich: formatter.format(dien_tich), // Gửi text
+                                don_gia: formatter.format(don_gia),     // Gửi text
                                 clcl: `${clcl_percent}%`,
-                                thanh_tien: formatter.format(thanh_tien),
-                                lam_tron: formatter.format(lam_tron),
+                                thanh_tien: formatter.format(thanh_tien), // Gửi text
+                                lam_tron: formatter.format(lam_tron),     // Gửi text
                                 boa: `${boa_percent}%`,
-                                gt_cho_vay: formatter.format(gt_cho_vay)
+                                gt_cho_vay: formatter.format(gt_cho_vay)  // Gửi text
                             };
 
                             // Tìm nhóm GCN đã có
@@ -974,7 +1121,8 @@
                         // Xóa ID6_TABLE cũ để tránh nhầm lẫn
                         // ID6_TABLE: (profile.valuationData || []).map(row => { ... }),
                         
-                        // Gửi các giá trị TỔNG đã được định dạng
+                        // --- START: SỬA LỖI CÚ PHÁP VÀ LOGIC (THEO YÊU CẦU MỚI: GỬI TEXT) ---
+                        // Gửi các giá trị TỔNG (Dưới dạng VĂN BẢN ĐỊNH DẠNG)
                         ID6_TOTAL_THANH_TIEN: formatter.format((profile.valuationData || []).reduce((acc, row) => {
                             const dien_tich = parseFloat(row.dien_tich) || 0;
                             const don_gia = parseFloat(row.don_gia) || 0;
@@ -983,18 +1131,26 @@
                             return acc + thanh_tien;
                         }, 0)),
                         
-                        ID6_TOTAL_LAM_TRON: document.getElementById('id6_total_value').textContent, // Đã được định dạng
+                        ID6_TOTAL_LAM_TRON: formatter.format((profile.valuationData || []).reduce((acc, row) => {
+                            const dien_tich = parseFloat(row.dien_tich) || 0;
+                            const don_gia = parseFloat(row.don_gia) || 0;
+                            const clcl_percent = parseFloat(row.clcl) || 100;
+                            const thanh_tien = dien_tich * don_gia * (clcl_percent / 100);
+                            const lam_tron = Math.floor(thanh_tien / 1000000) * 1000000;
+                            return acc + lam_tron;
+                        }, 0)), 
 
                         ID6_TOTAL_GT_CHO_VAY: formatter.format((profile.valuationData || []).reduce((acc, row) => {
                             const dien_tich = parseFloat(row.dien_tich) || 0;
                             const don_gia = parseFloat(row.don_gia) || 0;
                             const clcl_percent = parseFloat(row.clcl) || 100;
-                            const boa_percent = parseFloat(row.boa) || 0;
+                            const boa_percent = parseFloat(row.boa) || 0; 
                             const thanh_tien = dien_tich * don_gia * (clcl_percent / 100);
                             const lam_tron = Math.floor(thanh_tien / 1000000) * 1000000;
-                            const gt_cho_vay = lam_tron * (boa_percent / 100);
+                            const gt_cho_vay = lam_tron * (boa_percent / 100); 
                             return acc + gt_cho_vay;
-                        }, 0)),
+                        }, 0))
+                        // --- END: SỬA LỖI CÚ PHÁP VÀ LOGIC ---
                         // --- KẾT THÚC DỮ LIỆU MỚI ---
                     };
 
@@ -1199,12 +1355,11 @@
                             saveAllProfilesToStorage();
                             renderCustomerList(profile.customers);
                             updateGeneratedId1Field();
-                            updateGeneratedId3Id4Fields();
-                        }
+                        updateGeneratedId3Id4Fields();
                     }
-                );
-            }
-
+                }
+            );
+        }
             // --- NEW FUNCTION: editCustomer ---
             window.editCustomer = function(index) {
                 const profile = allProfiles.find(p => p.id === currentProfileId);
@@ -1708,6 +1863,178 @@
                 });
 
                 id8Textarea.value = thoiHanList.join('\n');
+            }
+
+            // --- Hàm cập nhật ID9 (MỚI) ---
+            function updateGeneratedId9Field() {
+                const profile = allProfiles.find(p => p.id === currentProfileId);
+                const id9Textarea = document.getElementById('profile_id9');
+
+                if (!profile || !profile.qsddRecords || profile.qsddRecords.length === 0) {
+                    id9Textarea.value = 'Chưa có thông tin Quyền sử dụng đất.';
+                    return;
+                }
+
+                let generatedText = '';
+                profile.qsddRecords.forEach((record, index) => {
+                    const tenGCN = record.ten_gcn || '';
+                    const soGCN = record.so_gcn || '';
+                    const soVaoSo = record.so_vao_so_cap_gcn || '';
+                    const noiCapRaw = record.noi_cap_gcn || '';
+                    const noiCap = (noiCapRaw) ? formatNoiCapGCN(noiCapRaw) : '';
+                    const ngayCap = formatDateString(record.ngay_cap_gcn) || '';
+                    const soThua = record.so_thua || '';
+                    const toBanDo = record.to_ban_do || '';
+                    const diaChi = record.dia_chi || '';
+                    const mucDich = record.muc_dich_su_dung || '';
+                    const thoiHan = record.thoi_han_su_dung || '';
+
+                    generatedText += `Tài sản ${index + 1}:\n`;
+                    generatedText += `(i) Thửa đất số: ${soThua}`;
+                    if (toBanDo) {
+                        generatedText += ` ; Tờ bản đồ số (nếu có): ${toBanDo}`; // Sửa lại "nếu có"
+                    }
+                    generatedText += `\n`;
+                    generatedText += `Mục đích sử dụng đất: ${mucDich}\n`;
+                    generatedText += `Thời hạn sử dụng đất: ${thoiHan}\n`;
+                    generatedText += `(ii) Địa chỉ thửa đất: ${diaChi}\n`;
+                    generatedText += `(iii) Giấy chứng nhận đối với quyền sử dụng đất: \n`;
+                    // BẮT ĐẦU THAY ĐỔI
+                    // Quy tắc cũ:
+                    // generatedText += `Tên Giấy chứng nhận: ${tenGCN}\n`;
+                    // generatedText += `Số phát hành: ${soGCN} , số vào sổ cấp giấy: ${soVaoSo}\n`;
+                    // generatedText += `Cơ quan cấp: ${noiCap}., ngày cấp : ${ngayCap}\n`;
+                    
+                    // Quy tắc mới:
+                    generatedText += `Giấy chứng nhận ${tenGCN} Số ${soGCN} do ${noiCap} cấp ngày ${ngayCap}. Số vào sổ cấp GCN : ${soVaoSo}\n`;
+                    // KẾT THÚC THAY ĐỔI
+                    
+                    if (index < profile.qsddRecords.length - 1) {
+                        generatedText += '\n\n'; // Thêm khoảng cách giữa các sổ
+                    }
+                });
+
+                id9Textarea.value = generatedText;
+            }
+
+            // --- Hàm trợ giúp kiểm tra Tài sản gắn liền với đất (MỚI) ---
+            function hasTaiSanGanLien(record) {
+                if (!record) return false;
+                const fields = [
+                    record.loai_nha_o,
+                    record.dien_tich_xay_dung,
+                    record.dien_tich_san,
+                    record.hinh_thuc_so_huu_tai_san,
+                    record.cap_hang,
+                    record.thoi_han_so_huu_tai_san
+                ];
+                // Check if *any* field has a non-empty, non-'N/A' value
+                return fields.some(field => field && String(field).trim() !== '' && String(field).trim() !== 'N/A');
+            }
+
+            // --- Hàm cập nhật ID10 (MỚI) ---
+            function updateGeneratedId10Field() {
+                const profile = allProfiles.find(p => p.id === currentProfileId);
+                const id10Textarea = document.getElementById('profile_id10');
+
+                if (!profile || !profile.qsddRecords || profile.qsddRecords.length === 0) {
+                    id10Textarea.value = 'Chưa có thông tin Quyền sử dụng đất.';
+                    return;
+                }
+
+                // Lọc các Sổ đỏ có TSGLVĐ
+                const filteredRecords = profile.qsddRecords.filter(record => hasTaiSanGanLien(record));
+
+                if (filteredRecords.length === 0) {
+                    id10Textarea.value = 'Không có QSDĐ nào có thông tin Tài sản gắn liền với đất.';
+                    return;
+                }
+
+                let generatedText = '';
+                filteredRecords.forEach((record, index) => {
+                    const tenGCN = record.ten_gcn || '';
+                    const soGCN = record.so_gcn || '';
+                    const soVaoSo = record.so_vao_so_cap_gcn || '';
+                    const noiCapRaw = record.noi_cap_gcn || '';
+                    const noiCap = (noiCapRaw) ? formatNoiCapGCN(noiCapRaw) : '';
+                    const ngayCap = formatDateString(record.ngay_cap_gcn) || '';
+                    const soThua = record.so_thua || '';
+                    const toBanDo = record.to_ban_do || '';
+
+                    // Áp dụng định dạng mới
+                    generatedText += `*Tài sản ${index + 1}\n`;
+                    generatedText += `(i) Giấy chứng nhận\n`;
+                    generatedText += `Tên Giấy chứng nhận: ${tenGCN} Số ${soGCN}\n`;
+                    generatedText += `Số phát hành:. Số ${soGCN}  , số vào sổ cấp giấy ${soVaoSo}\n`;
+                    generatedText += `Cơ quan cấp: ${noiCap}, ngày cấp : ${ngayCap}\n`;
+                    generatedText += `(ii) Số của thửa đất nơi có tài sản: ${soThua}`;
+                    if (toBanDo) {
+                        generatedText += `; Tờ bản đồ số (nếu có): ${toBanDo}`;
+                    }
+                    generatedText += '\n';
+
+                    if (index < filteredRecords.length - 1) {
+                        generatedText += '\n\n'; // Thêm khoảng cách giữa các sổ
+                    }
+                });
+
+                id10Textarea.value = generatedText;
+            }
+
+            // --- Hàm cập nhật ID11 (MỚI) ---
+            function updateGeneratedId11Field() {
+                const profile = allProfiles.find(p => p.id === currentProfileId);
+                const tableContainer = document.getElementById('profile_id11_table');
+                
+                if (!tableContainer) return; // Guard clause
+                
+                tableContainer.innerHTML = '';
+
+                if (!profile || !profile.qsddRecords || profile.qsddRecords.length === 0) {
+                    tableContainer.innerHTML = '<p class="text-gray-500 text-center">Chưa có thông tin Quyền sử dụng đất.</p>';
+                    return;
+                }
+
+                let tableHtml = `
+                    <table class="w-full border-collapse border border-gray-300">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Danh mục hồ sơ bàn giao</th>
+                                <th>Bản gốc</th>
+                                <th>Bản sao</th>
+                                <th>Ghi chú</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                profile.qsddRecords.forEach((record, index) => {
+                    const stt = index + 1;
+                    const tenGCN = (record.ten_gcn ? record.ten_gcn.toLowerCase() : '[Chưa có tên GCN]');
+                    const soGCN = record.so_gcn || '[Chưa có số GCN]';
+                    const danhMuc = `Giấy chứng nhận ${tenGCN} Số ${soGCN}`;
+                    const banGoc = '☑'; // Checked box
+                    const banSao = '☐'; // Unchecked box
+                    const ghiChu = '1 bản';
+
+                    tableHtml += `
+                        <tr>
+                            <td>${stt}</td>
+                            <td>${danhMuc}</td>
+                            <td>${banGoc}</td>
+                            <td>${banSao}</td>
+                            <td>${ghiChu}</td>
+                        </tr>
+                    `;
+                });
+
+                tableHtml += `
+                        </tbody>
+                    </table>
+                `;
+                
+                tableContainer.innerHTML = tableHtml;
             }
 
 
@@ -2599,6 +2926,9 @@
                         updateGeneratedId5Field(); // Cập nhật ID5 sau khi xóa
                         updateGeneratedId7Field(); // Cập nhật ID7 sau khi xóa (MỚI)
                         updateGeneratedId8Field(); // Cập nhật ID8 sau khi xóa (MỚI)
+                        updateGeneratedId9Field(); // Cập nhật ID9 sau khi xóa (MỚI)
+                        updateGeneratedId10Field(); // Cập nhật ID10 sau khi xóa (MỚI)
+                        updateGeneratedId11Field(); // Cập nhật ID11 sau khi xóa (MỚI)
                     }
                 );
             }
@@ -2634,6 +2964,9 @@
                 updateGeneratedId5Field(); // Cập nhật ID5 sau khi lưu
                 updateGeneratedId7Field(); // Cập nhật ID7 sau khi lưu (MỚI)
                 updateGeneratedId8Field(); // Cập nhật ID8 sau khi lưu (MỚI)
+                updateGeneratedId9Field(); // Cập nhật ID9 sau khi lưu (MỚI)
+                updateGeneratedId10Field(); // Cập nhật ID10 sau khi lưu (MỚI)
+                updateGeneratedId11Field(); // Cập nhật ID11 sau khi lưu (MỚI)
             }
 
             btnSaveQsdd.addEventListener('click', () => {
@@ -2655,6 +2988,9 @@
                 updateGeneratedId5Field(); // Cập nhật ID5 sau khi lưu
                 updateGeneratedId7Field(); // Cập nhật ID7 sau khi lưu (MỚI)
                 updateGeneratedId8Field(); // Cập nhật ID8 sau khi lưu (MỚI)
+                updateGeneratedId9Field(); // Cập nhật ID9 sau khi lưu (MỚI)
+                updateGeneratedId10Field(); // Cập nhật ID10 sau khi lưu (MỚI)
+                updateGeneratedId11Field(); // Cập nhật ID11 sau khi lưu (MỚI)
                 
                 statusDiv_QSDD.classList.remove('hidden');
                 statusBox_QSDD.className = 'flex items-center justify-center bg-green-100 p-3 rounded-lg text-green-800';
