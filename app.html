@@ -157,6 +157,7 @@
                     <select id="template_select" class="flex-grow block w-full md:w-auto px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                         <option value="https://raw.githubusercontent.com/gocvan366-source/Autodoc/refs/heads/main/BBDG%20CSH.docx">BBĐG</option>
                         <option value="https://raw.githubusercontent.com/gocvan366-source/Autodoc/refs/heads/main/BBDG%203%20B%C3%8AN.docx">BBĐG 3 Bên</option>
+                        <option value="https://raw.githubusercontent.com/gocvan366-source/Autodoc/refs/heads/main/HoSoTSBD_T%E1%BB%9D%20tr%C3%ACnh%20th%E1%BA%A9m%20%C4%91%E1%BB%8Bnh%20TSB%C4%90%20(kh%C3%B4ng%20qua%20AMC)_2025-11-10.docx">Tờ trình thẩm định TSĐB (không qua AMC)</option>
                     </select>
                     <button id="btn_generate_docx" class="w-full md:w-auto bg-blue-600 text-white font-bold py-2 px-5 rounded-lg hover:bg-blue-700 transition duration-300">
                         Tạo DOCX
@@ -272,6 +273,18 @@
                 </div>
             </section>
 
+            <!-- SECTION 9: ID7 (NEW) -->
+            <section class="p-4 border rounded-lg bg-gray-50 mt-4">
+                <label for="profile_id7" class="block text-sm font-semibold text-gray-700">9. ID7 (Tự động tổng hợp Số GCN)</label>
+                <textarea id="profile_id7" class="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" readonly rows="3"></textarea>
+            </section>
+
+            <!-- SECTION 10: ID8 (NEW) -->
+            <section class="p-4 border rounded-lg bg-gray-50 mt-4">
+                <label for="profile_id8" class="block text-sm font-semibold text-gray-700">10. ID8 (Tự động tổng hợp Thời hạn sử dụng)</label>
+                <textarea id="profile_id8" class="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" readonly rows="4"></textarea>
+            </section>
+
         </div>
 
         <!-- PAGE 3: VALUATION VIEW (Initially Hidden) -->
@@ -289,6 +302,22 @@
             </div>
             <div id="valuation_table_container" class="table-container">
                 <!-- Valuation table will be injected here by JS -->
+            </div>
+
+            <!-- NEW D1 FIELD -->
+            <div class="mt-6 p-4 border rounded-lg bg-gray-50 max-w-md mx-auto">
+                <label for="valuation_d1" class="block text-sm font-semibold text-gray-700 mb-2">
+                    D1: Giá trị mức cấp tín dụng tối đa so với giá trị TSBĐ
+                </label>
+                <input type="text" id="valuation_d1" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Nhập giá trị (ví dụ: 1.000.000)" inputmode="numeric">
+            </div>
+
+            <!-- NEW D2 FIELD -->
+            <div class="mt-4 p-4 border rounded-lg bg-gray-50 max-w-md mx-auto">
+                <label for="valuation_d2" class="block text-sm font-semibold text-gray-700 mb-2">
+                    D2: Tỷ lệ (%) D1 / Tổng giá trị làm tròn
+                </label>
+                <input type="text" id="valuation_d2" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-100 text-blue-700 font-bold" readonly>
             </div>
         </div>
 
@@ -322,6 +351,16 @@
                     <label for="bank_tt4" class="block text-sm font-medium text-gray-700">TT4 (Liên hệ)</label>
                     <input type="text" id="bank_tt4" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" readonly>
                 </div>
+                <!-- BẮT ĐẦU THÊM MỚI -->
+                <div>
+                    <label for="bank_tt5" class="block text-sm font-medium text-gray-700">TT5 (Đơn vị)</label>
+                    <input type="text" id="bank_tt5" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-100" readonly>
+                </div>
+                <div>
+                    <label for="bank_tt6" class="block text-sm font-medium text-gray-700">TT6 (Lãnh đạo)</label>
+                    <input type="text" id="bank_tt6" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-100" readonly>
+                </div>
+                <!-- KẾT THÚC THÊM MỚI -->
             </div>
             <div class="mt-6 flex justify-end">
                 <button id="btn_save_bank_info" class="bg-blue-600 text-white font-bold py-2 px-5 rounded-lg hover:bg-blue-700 transition duration-300">
@@ -393,6 +432,27 @@
             const formatter = new Intl.NumberFormat('vi-VN');
             const parseFormattedNumber = (val) => parseFloat(String(val).replace(/\./g, '')) || 0;
 
+            // --- NEW: D1 Formatter ---
+            const d1Input_formatter = document.getElementById('valuation_d1');
+            if (d1Input_formatter) {
+                d1Input_formatter.addEventListener('input', (e) => {
+                    // 1. Lấy giá trị số thô
+                    const rawValue = parseFormattedNumber(e.target.value);
+                    
+                    // 2. Cập nhật giá trị đã định dạng
+                    if (rawValue > 0) {
+                        e.target.value = formatter.format(rawValue);
+                    } else {
+                        e.target.value = ''; // Xóa nếu là 0 hoặc không hợp lệ
+                    }
+
+                    // 3. Kích hoạt tính toán D2
+                    window.calculateD2();
+                });
+            }
+            // --- END NEW ---
+
+
             // --- Bank Info Modal Elements ---
             const btnBankInfo = document.getElementById('btn_bank_info');
             const modalBankInfo = document.getElementById('modal_bank_info');
@@ -402,6 +462,10 @@
             const bankTT2 = document.getElementById('bank_tt2');
             const bankTT3 = document.getElementById('bank_tt3');
             const bankTT4 = document.getElementById('bank_tt4');
+            // BẮT ĐẦU THÊM MỚI
+            const bankTT5 = document.getElementById('bank_tt5');
+            const bankTT6 = document.getElementById('bank_tt6');
+            // KẾT THÚC THÊM MỚI
 
             // --- NEW: Confirmation Modal Elements ---
             const modalConfirm = document.getElementById('modal_confirm');
@@ -444,12 +508,20 @@
                 "PGD Tân Thạnh": {
                     tt2: "Ngân Hàng Thương Mại Cổ Phần Công Thương Việt Nam – Chi Nhánh Long An – Phòng Giao Dịch Tân Thạnh",
                     tt3: "168 Trần Văn Giàu, xã Tân Thạnh, tỉnh Tây Ninh",
-                    tt4: "Điện thoại : 02723 845 046"
+                    tt4: "Điện thoại : 02723 845 046",
+                    // BẮT ĐẦU THÊM MỚI
+                    tt5: "PGD Tân Thạnh",
+                    tt6: "Lãnh đạo PGD Tân Thạnh"
+                    // KẾT THÚC THÊM MỚI
                 },
                 "Hội sở": {
                     tt2: "Ngân Hàng Thương Mại Cổ Phần Công Thương Việt Nam – Chi Nhánh Long An",
                     tt3: "396 Quốc Lộ 1, Phường Long An, tỉnh Tây Ninh",
-                    tt4: "Điện thoại : 02723 845 046"
+                    tt4: "Điện thoại : 02723 845 046",
+                    // BẮT ĐẦU THÊM MỚI
+                    tt5: "CN Long An",
+                    tt6: "Ban giám đốc chi nhánh Long An"
+                    // KẾT THÚC THÊM MỚI
                 }
             };
 
@@ -464,7 +536,24 @@
                 // Fix old profiles lacking bankInfo
                 allProfiles.forEach(profile => {
                     if (!profile.bankInfo) {
-                        profile.bankInfo = { tt1: '', tt2: '', tt3: '', tt4: '' };
+                        // SỬA ĐỔI: Thêm tt5, tt6 vào đối tượng mặc định
+                        profile.bankInfo = { tt1: '', tt2: '', tt3: '', tt4: '', tt5: '', tt6: '' };
+                    }
+                    // BẮT ĐẦU THÊM MỚI: Fix các bankInfo cũ thiếu trường
+                    else {
+                        if (profile.bankInfo.tt5 === undefined) {
+                            profile.bankInfo.tt5 = '';
+                        }
+                        if (profile.bankInfo.tt6 === undefined) {
+                            profile.bankInfo.tt6 = '';
+                        }
+                    }
+                    // KẾT THÚC THÊM MỚI
+                    if (profile.valuation_d1 === undefined) { // Check for undefined
+                        profile.valuation_d1 = ''; // Add this
+                    }
+                    if (profile.valuation_d2 === undefined) { // Check for undefined
+                        profile.valuation_d2 = ''; // Add this
                     }
                 });
             }
@@ -522,6 +611,8 @@
                 updateGeneratedId3Id4Fields(); // Tự động tạo ID3 và ID4
                 updateGeneratedId5Field(); // Tự động tạo ID5
                 updateGeneratedId6Field(); // Tự động tạo ID6
+                updateGeneratedId7Field(); // Tự động tạo ID7 (MỚI)
+                updateGeneratedId8Field(); // Tự động tạo ID8 (MỚI)
             }
 
             // --- Page Navigation Logic ---
@@ -540,6 +631,8 @@
                     customers: [],
                     qsddRecords: [],
                     bankInfo: { tt1: '', tt2: '', tt3: '', tt4: '' },
+                    valuation_d1: '', // Add this
+                    valuation_d2: '', // Add this
                     // ID 1-5 đều tự động, không cần khởi tạo
                 };
 
@@ -561,6 +654,10 @@
                 
                 // Clear valuation page
                 valuationTableContainer.innerHTML = '';
+                const d1Input = document.getElementById('valuation_d1'); // Add this
+                if (d1Input) d1Input.value = ''; // Add this
+                const d2Input = document.getElementById('valuation_d2'); // Add this
+                if (d2Input) d2Input.value = ''; // Add this
 
                 // Clear ID fields
                 document.getElementById('profile_id1').value = '';
@@ -574,11 +671,21 @@
                 document.getElementById('id6_total_value').textContent = '';
                 document.getElementById('id6_total_text').textContent = '';
                 
+                // Clear ID7 (MỚI)
+                document.getElementById('profile_id7').value = '';
+                
+                // Clear ID8 (MỚI)
+                document.getElementById('profile_id8').value = '';
+                
                 // Clear bank info modal
                 bankTT1.value = '';
                 bankTT2.value = '';
                 bankTT3.value = '';
                 bankTT4.value = '';
+                // BẮT ĐẦU THÊM MỚI
+                bankTT5.value = '';
+                bankTT6.value = '';
+                // KẾT THÚC THÊM MỚI
 
                 currentProfileId = null;
 
@@ -596,6 +703,21 @@
                 const profile = allProfiles.find(p => p.id === currentProfileId);
                 valuationTitle.textContent = `Bảng tính Định giá: ${profile?.hoTen || ''}`;
                 renderValuationTable();
+
+                // --- MODIFIED ---
+                const d1Input = document.getElementById('valuation_d1');
+                if (d1Input && profile) {
+                    // Chuyển đổi giá trị thô (số) đã lưu thành chuỗi định dạng
+                    const rawValue = parseFormattedNumber(profile.valuation_d1 || '0');
+                    if (rawValue > 0) {
+                        d1Input.value = formatter.format(rawValue);
+                    } else {
+                        d1Input.value = '';
+                    }
+                }
+                calculateD2(); // Add this
+                // --- END MODIFIED ---
+
                 pageProfileDetails.style.display = 'none';
                 pageValuation.style.display = 'block';
             });
@@ -638,11 +760,16 @@
                 if (!profile) return;
 
                 // Load data from profile into modal
-                const info = profile.bankInfo || { tt1: '', tt2: '', tt3: '', tt4: '' };
+                // SỬA ĐỔI: Thêm tt5, tt6 vào đối tượng mặc định
+                const info = profile.bankInfo || { tt1: '', tt2: '', tt3: '', tt4: '', tt5: '', tt6: '' };
                 bankTT1.value = info.tt1;
                 bankTT2.value = info.tt2;
                 bankTT3.value = info.tt3;
                 bankTT4.value = info.tt4;
+                // BẮT ĐẦU THÊM MỚI
+                bankTT5.value = info.tt5;
+                bankTT6.value = info.tt6;
+                // KẾT THÚC THÊM MỚI
 
                 modalBankInfo.classList.add('is-visible');
             }
@@ -658,10 +785,18 @@
                     bankTT2.value = data.tt2;
                     bankTT3.value = data.tt3;
                     bankTT4.value = data.tt4;
+                    // BẮT ĐẦU THÊM MỚI
+                    bankTT5.value = data.tt5;
+                    bankTT6.value = data.tt6;
+                    // KẾT THÚC THÊM MỚI
                 } else {
                     bankTT2.value = '';
                     bankTT3.value = '';
                     bankTT4.value = '';
+                    // BẮT ĐẦU THÊM MỚI
+                    bankTT5.value = '';
+                    bankTT6.value = '';
+                    // KẾT THÚC THÊM MỚI
                 }
             });
 
@@ -679,7 +814,11 @@
                     tt1: bankTT1.value,
                     tt2: bankTT2.value,
                     tt3: bankTT3.value,
-                    tt4: bankTT4.value
+                    tt4: bankTT4.value,
+                    // BẮT ĐẦU THÊM MỚI
+                    tt5: bankTT5.value,
+                    tt6: bankTT6.value
+                    // KẾT THÚC THÊM MỚI
                 };
                 
                 saveAllProfilesToStorage();
@@ -702,6 +841,18 @@
 
                 try {
                     // 2. Thu thập dữ liệu
+                    
+                    // --- BẮT ĐẦU CHỈNH SỬA: Thêm các đối tượng helper cho khách hàng ---
+                    const kh1 = profile.customers[0] || {};
+                    const kh2 = profile.customers[1] || {};
+                    const kh3 = profile.customers[2] || {};
+                    const kh4 = profile.customers[3] || {};
+                    // --- KẾT THÚC CHỈNH SỬA ---
+
+                    // --- ADD: Định dạng D1 cho DOCX ---
+                    const d1ValueForDocx = parseFloat(profile.valuation_d1) || 0;
+                    // --- END ADD ---
+
                     const data = {
                         ID1: document.getElementById('profile_id1').value,
                         ID2: document.getElementById('profile_id2').value,
@@ -710,17 +861,75 @@
                         ID5: document.getElementById('profile_id5').value,
                         ID6_VALUE: document.getElementById('id6_total_value').textContent,
                         ID6_TEXT: document.getElementById('id6_total_text').textContent,
+                        // BẮT ĐẦU THÊM MỚI (ID7, ID8)
+                        ID7: document.getElementById('profile_id7').value,
+                        ID8: document.getElementById('profile_id8').value,
+                        // KẾT THÚC THÊM MỚI (ID7, ID8)
+                        D1: d1ValueForDocx > 0 ? formatter.format(d1ValueForDocx) : '', // --- MODIFIED ---
+                        D2: profile.valuation_d2 || '', // --- ADD THIS ---
                         TT2: profile.bankInfo.tt2 || '',
                         TT3: profile.bankInfo.tt3 || '',
                         TT4: profile.bankInfo.tt4 || '',
+                        // BẮT ĐẦU THÊM MỚI
+                        TT5: profile.bankInfo.tt5 || '',
+                        TT6: profile.bankInfo.tt6 || '',
+                        // KẾT THÚC THÊM MỚI
                         // Thêm các trường khác nếu mẫu của bạn cần
                         // Ví dụ: Tên hồ sơ, SĐT
                         HO_TEN_HS: profile.hoTen,
                         SDT_HS: profile.sdt,
-                        // Bạn có thể thêm dữ liệu khách hàng chi tiết nếu cần
-                        // KH1_TEN: profile.customers[0]?.ho_ten || '',
-                        // KH1_CCCD: profile.customers[0]?.so_cccd || '',
-                        // ...
+                        
+                        // --- BẮT ĐẦU CHỈNH SỬA: Thêm dữ liệu chi tiết của 4 khách hàng ---
+                        
+                        // Khách hàng 1
+                        KH1_TEN: kh1.ho_ten || '',
+                        KH1_CCCD: kh1.so_cccd || '',
+                        KH1_NGAY_SINH: kh1.ngay_sinh || '',
+                        KH1_GIOI_TINH: kh1.gioi_tinh || '',
+                        KH1_NOI_THUONG_TRU: kh1.noi_thuong_tru || '',
+                        KH1_NGAY_CAP: kh1.ngay_cap || '',
+                        KH1_NOI_CAP: formatNoiCap(kh1.noi_cap) || '', // Dùng hàm format có sẵn
+                        KH1_NGAY_HET_HAN: kh1.ngay_het_han || '',
+                        KH1_NAM_SINH: (kh1.ngay_sinh || '....').split('/').pop(),
+                        KH1_PREFIX: (kh1.gioi_tinh || '').toLowerCase() === 'nam' ? 'Ông' : 'Bà',
+
+                        // Khách hàng 2
+                        KH2_TEN: kh2.ho_ten || '',
+                        KH2_CCCD: kh2.so_cccd || '',
+                        KH2_NGAY_SINH: kh2.ngay_sinh || '',
+                        KH2_GIOI_TINH: kh2.gioi_tinh || '',
+                        KH2_NOI_THUONG_TRU: kh2.noi_thuong_tru || '',
+                        KH2_NGAY_CAP: kh2.ngay_cap || '',
+                        KH2_NOI_CAP: formatNoiCap(kh2.noi_cap) || '',
+                        KH2_NGAY_HET_HAN: kh2.ngay_het_han || '',
+                        KH2_NAM_SINH: (kh2.ngay_sinh || '....').split('/').pop(),
+                        KH2_PREFIX: (kh2.gioi_tinh || '').toLowerCase() === 'nam' ? 'Ông' : 'Bà',
+
+                        // Khách hàng 3
+                        KH3_TEN: kh3.ho_ten || '',
+                        KH3_CCCD: kh3.so_cccd || '',
+                        KH3_NGAY_SINH: kh3.ngay_sinh || '',
+                        KH3_GIOI_TINH: kh3.gioi_tinh || '',
+                        KH3_NOI_THUONG_TRU: kh3.noi_thuong_tru || '',
+                        KH3_NGAY_CAP: kh3.ngay_cap || '',
+                        KH3_NOI_CAP: formatNoiCap(kh3.noi_cap) || '',
+                        KH3_NGAY_HET_HAN: kh3.ngay_het_han || '',
+                        KH3_NAM_SINH: (kh3.ngay_sinh || '....').split('/').pop(),
+                        KH3_PREFIX: (kh3.gioi_tinh || '').toLowerCase() === 'nam' ? 'Ông' : 'Bà',
+
+                        // Khách hàng 4
+                        KH4_TEN: kh4.ho_ten || '',
+                        KH4_CCCD: kh4.so_cccd || '',
+                        KH4_NGAY_SINH: kh4.ngay_sinh || '',
+                        KH4_GIOI_TINH: kh4.gioi_tinh || '',
+                        KH4_NOI_THUONG_TRU: kh4.noi_thuong_tru || '',
+                        KH4_NGAY_CAP: kh4.ngay_cap || '',
+                        KH4_NOI_CAP: formatNoiCap(kh4.noi_cap) || '',
+                        KH4_NGAY_HET_HAN: kh4.ngay_het_han || '',
+                        KH4_NAM_SINH: (kh4.ngay_sinh || '....').split('/').pop(),
+                        KH4_PREFIX: (kh4.gioi_tinh || '').toLowerCase() === 'nam' ? 'Ông' : 'Bà',
+                        
+                        // --- KẾT THÚC CHỈNH SỬA ---
                         
                         // --- START: LOGIC NHÓM BẢNG ID6 ---
                         ID6_GROUPS: (profile.valuationData || []).reduce((acc, row) => {
@@ -1466,6 +1675,41 @@
                 totalTextSpan.textContent = docSoThanhChu(totalLamTron) + " đồng.";
             }
 
+            // --- Hàm cập nhật ID7 (MỚI) ---
+            function updateGeneratedId7Field() {
+                const profile = allProfiles.find(p => p.id === currentProfileId);
+                const id7Textarea = document.getElementById('profile_id7');
+
+                if (!profile || !profile.qsddRecords || profile.qsddRecords.length === 0) {
+                    id7Textarea.value = 'Chưa có thông tin Quyền sử dụng đất.';
+                    return;
+                }
+
+                const gcnList = profile.qsddRecords.map(record => {
+                    return record.so_gcn || '[Chưa có số GCN]';
+                });
+
+                id7Textarea.value = gcnList.join(', ');
+            }
+
+            // --- Hàm cập nhật ID8 (MỚI) ---
+            function updateGeneratedId8Field() {
+                const profile = allProfiles.find(p => p.id === currentProfileId);
+                const id8Textarea = document.getElementById('profile_id8');
+
+                if (!profile || !profile.qsddRecords || profile.qsddRecords.length === 0) {
+                    id8Textarea.value = 'Chưa có thông tin Quyền sử dụng đất.';
+                    return;
+                }
+
+                const thoiHanList = profile.qsddRecords.map((record, index) => {
+                    const thoiHan = record.thoi_han_su_dung || '[Chưa có Thời hạn sử dụng]';
+                    return `- Tài sản ${index + 1} : ${thoiHan}`;
+                });
+
+                id8Textarea.value = thoiHanList.join('\n');
+            }
+
 
             // --- Valuation Table Logic ---
             
@@ -1590,6 +1834,36 @@
             }
             window.calculateRow = calculateRow; // Attach to window for onclick
 
+            // --- NEW FUNCTION: calculateD2 ---
+            function calculateD2() {
+                try {
+                    const d1Input = document.getElementById('valuation_d1');
+                    const d2Input = document.getElementById('valuation_d2');
+                    const totalLamTronEl = document.getElementById('total_lam_tron'); // From table footer
+
+                    if (!d1Input || !d2Input || !totalLamTronEl) return; // Elements not ready
+
+                    const d1Value = parseFormattedNumber(d1Input.value) || 0; // MODIFIED
+                    const totalLamTronValue = parseFormattedNumber(totalLamTronEl.textContent);
+
+                    if (totalLamTronValue === 0) {
+                        d2Input.value = 'N/A (Tổng giá trị = 0)';
+                        return;
+                    }
+
+                    const result = (d1Value / totalLamTronValue) * 100;
+                    // Format to "70,25%"
+                    d2Input.value = result.toFixed(2).replace('.', ',') + '%';
+
+                } catch (e) {
+                    console.error("Lỗi khi tính D2:", e);
+                    if(document.getElementById('valuation_d2')) {
+                        document.getElementById('valuation_d2').value = "Lỗi";
+                    }
+                }
+            }
+            window.calculateD2 = calculateD2; // Attach to window for oninput
+
             function calculateTotals() {
                 let totalThanhTien = 0;
                 let totalLamTron = 0;
@@ -1604,6 +1878,8 @@
                 document.getElementById('total_thanh_tien').textContent = formatter.format(totalThanhTien);
                 document.getElementById('total_lam_tron').textContent = formatter.format(totalLamTron);
                 document.getElementById('total_gt_cho_vay').textContent = formatter.format(totalGTChoVay);
+
+                calculateD2(); // --- ADD THIS ---
             }
 
             // Hàm Lưu Bảng Định Giá (mới)
@@ -1657,6 +1933,17 @@
                         isGroup // Cần biết đây có phải là hàng đầu tiên của nhóm không
                     });
                 });
+
+                // --- ADD THIS ---
+                const d1Input = document.getElementById('valuation_d1');
+                if (d1Input) {
+                    profile.valuation_d1 = parseFormattedNumber(d1Input.value) || ''; // MODIFIED: Lưu giá trị số thô
+                }
+                const d2Input = document.getElementById('valuation_d2'); // --- ADD THIS ---
+                if (d2Input) { // --- ADD THIS ---
+                    profile.valuation_d2 = d2Input.value; // --- ADD THIS ---
+                } // --- ADD THIS ---
+                // --- END ADD ---
 
                 saveAllProfilesToStorage();
             }
@@ -1843,6 +2130,11 @@
                 if (savedData.length > 0) {
                     window.currentValuationRowIds.forEach(id => calculateRow(id));
                 }
+                // --- ADD THIS ---
+                // Tính D2 sau khi bảng đã được render xong và D1 đã được tải
+                // (calculateTotals() đã chạy, D1 sẽ được tải ở btnValuation listener)
+                setTimeout(calculateD2, 0); 
+                // --- END ADD ---
             }
 
 
@@ -2305,6 +2597,8 @@
                         qsddDetailsView.innerHTML = ''; 
                         updateGeneratedId2Field(); // Cập nhật ID2 sau khi xóa
                         updateGeneratedId5Field(); // Cập nhật ID5 sau khi xóa
+                        updateGeneratedId7Field(); // Cập nhật ID7 sau khi xóa (MỚI)
+                        updateGeneratedId8Field(); // Cập nhật ID8 sau khi xóa (MỚI)
                     }
                 );
             }
@@ -2338,6 +2632,8 @@
                 displaySavedQsddDetails(index, false);
                 updateGeneratedId2Field(); // Cập nhật ID2 sau khi lưu
                 updateGeneratedId5Field(); // Cập nhật ID5 sau khi lưu
+                updateGeneratedId7Field(); // Cập nhật ID7 sau khi lưu (MỚI)
+                updateGeneratedId8Field(); // Cập nhật ID8 sau khi lưu (MỚI)
             }
 
             btnSaveQsdd.addEventListener('click', () => {
@@ -2357,6 +2653,8 @@
                 renderSavedQsddButtons(profile.qsddRecords);
                 updateGeneratedId2Field(); // Cập nhật ID2 sau khi lưu
                 updateGeneratedId5Field(); // Cập nhật ID5 sau khi lưu
+                updateGeneratedId7Field(); // Cập nhật ID7 sau khi lưu (MỚI)
+                updateGeneratedId8Field(); // Cập nhật ID8 sau khi lưu (MỚI)
                 
                 statusDiv_QSDD.classList.remove('hidden');
                 statusBox_QSDD.className = 'flex items-center justify-center bg-green-100 p-3 rounded-lg text-green-800';
