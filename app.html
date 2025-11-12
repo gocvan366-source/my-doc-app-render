@@ -462,8 +462,13 @@
                     <label for="bank_tt1" class="block text-sm font-medium text-gray-700">TT1 (Chọn chi nhánh)</label>
                     <select id="bank_tt1" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                         <option value="">-- Chọn một tùy chọn --</option>
+                        <option value="Hội Sở">Hội Sở</option>
                         <option value="PGD Tân Thạnh">PGD Tân Thạnh</option>
-                        <option value="Hội sở">Hội sở</option>
+                        <option value="PGD Tân An">PGD Tân An</option>
+                        <option value="PGD Đức Hòa">PGD Đức Hòa</option>
+                        <option value="PGD Mộc Hóa">PGD Mộc Hóa</option>
+                        <option value="PGD Đức Hòa Nam">PGD Đức Hòa Nam</option>
+                        <option value="PGD Châu Thị Kim">PGD Châu Thị Kim</option>
                     </select>
                 </div>
                 <div>
@@ -498,6 +503,12 @@
                     <input type="text" id="bank_tt8" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-100" readonly>
                 </div>
                 <!-- KẾT THÚC TT7 & TT8 -->
+                <!-- BẮT ĐẦU TT9 (MỚI) -->
+                <div>
+                    <label for="bank_tt9" class="block text-sm font-medium text-gray-700">TT9 (Thông tin SKHĐT)</label>
+                    <textarea id="bank_tt9" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-100" readonly rows="4"></textarea>
+                </div>
+                <!-- KẾT THÚC TT9 (MỚI) -->
             </div>
             <div class="mt-6 flex justify-end">
                 <button id="btn_save_bank_info" class="bg-blue-600 text-white font-bold py-2 px-5 rounded-lg hover:bg-blue-700 transition duration-300">
@@ -607,6 +618,7 @@
             const bankTT7 = document.getElementById('bank_tt7');
             const bankTT8 = document.getElementById('bank_tt8');
             // KẾT THÚC TT7 & TT8
+            const bankTT9 = document.getElementById('bank_tt9'); // TT9 MỚI
 
             // --- NEW: Confirmation Modal Elements ---
             const modalConfirm = document.getElementById('modal_confirm');
@@ -646,31 +658,75 @@
             const BACKEND_URL = 'https://autodoc-ctg.onrender.com'; // Đã cập nhật URL Render
             
             const bankInfoData = {
-                "PGD Tân Thạnh": {
-                    tt2: "Ngân Hàng Thương Mại Cổ Phần Công Thương Việt Nam – Chi Nhánh Long An – Phòng Giao Dịch Tân Thạnh",
-                    tt3: "168 Trần Văn Giàu, xã Tân Thạnh, tỉnh Tây Ninh",
-                    tt4: "Điện thoại : 02723 845 046",
-                    // BẮT ĐẦU THÊM MỚI
-                    tt5: "PGD Tân Thạnh",
-                    tt6: "Lãnh đạo PGD Tân Thạnh",
-                    // KẾT THÚC THÊM MỚI
-                    // BẮT ĐẦU TT7 & TT8
-                    tt7: "NGÂN HÀNG TMCP CÔNG THƯƠNG VIỆT NAM – CHI NHÁNH LONG AN - PGD TÂN THẠNH",
-                    tt8: "0100111948-034-1"
-                    // KẾT THÚC TT7 & TT8
-                },
-                "Hội sở": {
-                    tt2: "Ngân Hàng Thương Mại Cổ Phần Công Thương Việt Nam – Chi Nhánh Long An",
-                    tt3: "396 Quốc Lộ 1, Phường Long An, tỉnh Tây Ninh",
-                    tt4: "Điện thoại : 02723 845 046",
-                    // BẮT ĐẦU THÊM MỚI
+                "Hội Sở": {
+                    tt2: "Ngân hàng Thương Mại Cổ Phần Công thương Việt Nam - Chi nhánh Long An",
+                    tt3: "396 quốc lộ 1, phường Long An, tỉnh Tây Ninh",
+                    tt4: "Điện thoại : 02723 829 425", // CẬP NHẬT TỪ HS.TXT
                     tt5: "CN Long An",
                     tt6: "Ban giám đốc chi nhánh Long An",
-                    // KẾT THÚC THÊM MỚI
-                    // BẮT ĐẦU TT7 & TT8
-                    tt7: "NGÂN HÀNG TMCP CÔNG THƯƠNG VIỆT NAM – CHI NHÁNH LONG AN",
-                    tt8: "0100111948-034"
-                    // KẾT THÚC TT7 & TT8
+                    tt7: "NGÂN HÀNG TMCP CÔNG THƯƠNG VIỆT NAM - CHI NHÁNH LONG AN",
+                    tt8: "0100111948-034",
+                    tt9: "Sở Kế hoạch Đầu tư tỉnh Long An – Phòng Đăng ký kinh doanh cấp ngày 28/06/1993, đăng ký thay đổi lần 7 ngày 22/03/2022" // CẬP NHẬT TỪ HS.TXT
+                },
+                "PGD Tân Thạnh": {
+                    tt2: "Ngân hàng Thương Mại Cổ Phần Công thương Việt Nam - Chi nhánh Long An - Phòng Giao Dịch Tân Thạnh",
+                    tt3: "168 Trần Văn Giàu, xã Tân Thạnh, tỉnh Tây Ninh",
+                    tt4: "Điện thoại : 02723 845 046", // CẬP NHẬT TỪ HS.TXT
+                    tt5: "PGD Tân Thạnh",
+                    tt6: "Lãnh đạo PGD Tân Thạnh",
+                    tt7: "NGÂN HÀNG TMCP CÔNG THƯƠNG VIỆT NAM - CHI NHÁNH LONG AN - PGD TÂN THẠNH",
+                    tt8: "0100111948-034-1",
+                    tt9: "Sở Kế hoạch Đầu tư tỉnh Long An – Phòng Đăng ký kinh doanh cấp ngày 28/06/1993, đăng ký thay đổi lần 7 ngày 22/03/2022" // CẬP NHẬT TỪ HS.TXT
+                },
+                "PGD Tân An": {
+                    tt2: "Ngân hàng Thương Mại Cổ Phần Công thương Việt Nam - Chi nhánh Long An - Phòng Giao Dịch Tân An",
+                    tt3: "Số 30 Nguyễn Trung Trực, Phường Long An, tỉnh Tây Ninh", // CẬP NHẬT THEO YÊU CẦU
+                    tt4: "Điện thoại : 02723 821 593", // CẬP NHẬT TỪ HS.TXT
+                    tt5: "PGD Tân An",
+                    tt6: "Lãnh đạo PGD Tân An",
+                    tt7: "NGÂN HÀNG TMCP CÔNG THƯƠNG VIỆT NAM - CHI NHÁNH LONG AN - PGD TÂN AN",
+                    tt8: "0100111948-034-00608",
+                    tt9: "Sở Kế hoạch Đầu tư tỉnh Long An – Phòng Đăng ký kinh doanh cấp ngày 28/06/1993, đăng ký thay đổi lần 7 ngày 22/03/2022" // CẬP NHẬT TỪ HS.TXT (suy đoán)
+                },
+                "PGD Đức Hòa": {
+                    tt2: "Ngân hàng Thương Mại Cổ Phần Công thương Việt Nam - Chi nhánh Long An - Phòng Giao Dịch Đức Hòa",
+                    tt3: "Số 8D, Huỳnh Công Thân, Ô 3, Ấp Bàu Trai, Xã Hậu Nghĩa, Tỉnh Tây Ninh",
+                    tt4: "Điện thoại : 02723 851 013", // CẬP NHẬT THEO YÊU CẦU
+                    tt5: "PGD Đức Hòa",
+                    tt6: "Lãnh đạo PGD Đức Hòa",
+                    tt7: "NGÂN HÀNG TMCP CÔNG THƯƠNG VIỆT NAM - CHI NHÁNH LONG AN - PGD ĐỨC HÒA",
+                    tt8: "0100111948-034",
+                    tt9: "Sở Kế hoạch Đầu tư tỉnh Long An – Phòng Đăng ký kinh doanh cấp ngày 28/06/1993, đăng ký thay đổi lần 7 ngày 22/03/2022" // CẬP NHẬT TỪ HS.TXT
+                },
+                "PGD Mộc Hóa": {
+                    tt2: "Ngân hàng Thương Mại Cổ Phần Công thương Việt Nam - Chi nhánh Long An - Phòng Giao Dịch Mộc Hóa",
+                    tt3: "48-50 Hùng Vương, phường Kiến Tường, tỉnh Tây Ninh",
+                    tt4: "Điện thoại : 02723 842 352", // CẬP NHẬT TỪ HS.TXT
+                    tt5: "PGD Mộc Hóa",
+                    tt6: "Lãnh đạo PGD Mộc Hóa",
+                    tt7: "NGÂN HÀNG TMCP CÔNG THƯƠNG VIỆT NAM - CHI NHÁNH LONG AN - PGD MỘC HÓA",
+                    tt8: "0100111948-034",
+                    tt9: "Sở Kế hoạch Đầu tư tỉnh Long An – Phòng Đăng ký kinh doanh cấp ngày 28/06/1993, đăng ký thay đổi lần 7 ngày 22/03/2022" // CẬP NHẬT TỪ HS.TXT
+                },
+                "PGD Đức Hòa Nam": {
+                    tt2: "Ngân hàng Thương Mại Cổ Phần Công thương Việt Nam - Chi nhánh Long An - Phòng Giao Dịch Đức Hòa Nam",
+                    tt3: "Số 292 ấp Bình Tả 1, xã Đức Hòa, tỉnh Tây Ninh", // CẬP NHẬT TỪ HS.TXT (bỏ "...")
+                    tt4: "Điện thoại : 02723 850 679", // CẬP NHẬT TỪ HS.TXT
+                    tt5: "PGD Đức Hòa Nam",
+                    tt6: "Lãnh đạo PGD Đức Hòa Nam",
+                    tt7: "NGÂN HÀNG TMCP CÔNG THƯƠNG VIỆT NAM - CHI NHÁNH LONG AN - PGD ĐỨC HÒA NAM",
+                    tt8: "0100111948-034", // Giữ lại từ context (HS.TXT bị cắt)
+                    tt9: "Sở Kế hoạch Đầu tư tỉnh Long An – Phòng Đăng ký kinh doanh cấp ngày 28/06/1993, đăng ký thay đổi lần 7 ngày 22/03/2022" // CẬP NHẬT (suy đoán, HS.TXT bị cắt)
+                },
+                "PGD Châu Thị Kim": {
+                    tt2: "Ngân hàng Thương Mại Cổ Phần Công thương Việt Nam - Chi nhánh Long An - Phòng Giao Dịch Châu Thị Kim",
+                    tt3: "Số 8-10 Châu Thị Kim, Phường Long An, tỉnh Tây Ninh", // CẬP NHẬT THEO YÊU CẦU
+                    tt4: "Điện thoại : 02723 850 679", // CẬP NHẬT TỪ FILE MỚI
+                    tt5: "PGD Châu Thị Kim",
+                    tt6: "Lãnh đạo PGD Châu Thị Kim",
+                    tt7: "NGÂN HÀNG TMCP CÔNG THƯƠNG VIỆT NAM - CHI NHÁNH LONG AN - PGD CHÂU THỊ KIM",
+                    tt8: "0100111948-034",
+                    tt9: "Sở Kế hoạch Đầu tư tỉnh Long An – Phòng Đăng ký kinh doanh cấp ngày 28/06/1993, đăng ký thay đổi lần 7 ngày 22/03/2022" // CẬP NHẬT TỪ FILE MỚI (đã bỏ dấu " thừa)
                 }
             };
 
@@ -686,7 +742,7 @@
                 allProfiles.forEach(profile => {
                     if (!profile.bankInfo) {
                         // SỬA ĐỔI: Thêm tt5, tt6 vào đối tượng mặc định
-                        profile.bankInfo = { tt1: '', tt2: '', tt3: '', tt4: '', tt5: '', tt6: '', tt7: '', tt8: '' };
+                        profile.bankInfo = { tt1: '', tt2: '', tt3: '', tt4: '', tt5: '', tt6: '', tt7: '', tt8: '', tt9: '' };
                     }
                     // BẮT ĐẦU THÊM MỚI: Fix các bankInfo cũ thiếu trường
                     else {
@@ -704,6 +760,9 @@
                             profile.bankInfo.tt8 = '';
                         }
                         // KẾT THÚC TT7 & TT8
+                        if (profile.bankInfo.tt9 === undefined) { // TT9 MỚI
+                            profile.bankInfo.tt9 = ''; // TT9 MỚI
+                        } // TT9 MỚI
                     }
                     // KẾT THÚC THÊM MỚI
                     if (profile.valuation_d1 === undefined) { // Check for undefined
@@ -859,6 +918,7 @@
                 bankTT7.value = '';
                 bankTT8.value = '';
                 // KẾT THÚC TT7 & TT8
+                bankTT9.value = ''; // TT9 MỚI
 
                 currentProfileId = null;
 
@@ -934,7 +994,7 @@
 
                 // Load data from profile into modal
                 // SỬA ĐỔI: Thêm tt5, tt6 vào đối tượng mặc định
-                const info = profile.bankInfo || { tt1: '', tt2: '', tt3: '', tt4: '', tt5: '', tt6: '', tt7: '', tt8: '' };
+                const info = profile.bankInfo || { tt1: '', tt2: '', tt3: '', tt4: '', tt5: '', tt6: '', tt7: '', tt8: '', tt9: '' };
                 bankTT1.value = info.tt1;
                 bankTT2.value = info.tt2;
                 bankTT3.value = info.tt3;
@@ -947,6 +1007,7 @@
                 bankTT7.value = info.tt7;
                 bankTT8.value = info.tt8;
                 // KẾT THÚC TT7 & TT8
+                bankTT9.value = info.tt9; // TT9 MỚI
 
                 modalBankInfo.classList.add('is-visible');
             }
@@ -970,6 +1031,7 @@
                     bankTT7.value = data.tt7;
                     bankTT8.value = data.tt8;
                     // KẾT THÚC TT7 & TT8
+                    bankTT9.value = data.tt9; // TT9 MỚI
                 } else {
                     bankTT2.value = '';
                     bankTT3.value = '';
@@ -982,6 +1044,7 @@
                     bankTT7.value = '';
                     bankTT8.value = '';
                     // KẾT THÚC TT7 & TT8
+                    bankTT9.value = ''; // TT9 MỚI
                 }
             });
 
@@ -1008,6 +1071,7 @@
                     tt7: bankTT7.value,
                     tt8: bankTT8.value
                     // KẾT THÚC TT7 & TT8
+                    , tt9: bankTT9.value // TT9 MỚI
                 };
                 
                 saveAllProfilesToStorage();
@@ -1095,6 +1159,7 @@
                         TT7: profile.bankInfo.tt7 || '',
                         TT8: profile.bankInfo.tt8 || '',
                         // KẾT THÚC TT7 & TT8
+                        TT9: profile.bankInfo.tt9 || '', // TT9 MỚI
                         // Thêm các trường khác nếu mẫu của bạn cần
                         // Ví dụ: Tên hồ sơ, SĐT
                         HO_TEN_HS: profile.hoTen,
@@ -2021,7 +2086,12 @@
                 const filteredRecords = profile.qsddRecords.filter(record => hasTaiSanGanLien(record));
 
                 if (filteredRecords.length === 0) {
-                    id10Textarea.value = 'Không có QSDĐ nào có thông tin Tài sản gắn liền với đất.';
+                    // THAY ĐỔI: Thay vì báo không có, chèn nội dung mẫu
+                    id10Textarea.value = `(i) Giấy chứng nhận
+Tên Giấy chứng nhận:....................................
+Số phát hành:…….. :số vào sổ cấp giấy:………
+Cơ quan cấp:……., ngày…..tháng…..năm…..
+(ii) Số của thửa đất nơi có tài sản:….; Tờ bản đồ số(nếu có):……………………………..`;
                     return;
                 }
 
