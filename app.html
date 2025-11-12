@@ -270,18 +270,18 @@
             </section>
 
             <!-- SECTION 3-7: ID FIELDS -->
-            <section class="p-4 border rounded-lg bg-gray-50 mb-4">
+            <section class="p-4 border rounded-lg bg-gray-50 mb-4" style="display: none;">
                 <label for="profile_id1" class="block text-sm font-semibold text-gray-700">3. ID1 (Tự động tổng hợp từ Thông tin khách hàng)</label>
                 <textarea id="profile_id1" class="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" readonly rows="5"></textarea>
             </section>
             
-            <section class="p-4 border rounded-lg bg-gray-50 mb-4">
+            <section class="p-4 border rounded-lg bg-gray-50 mb-4" style="display: none;">
                 <label for="profile_id2" class="block text-sm font-semibold text-gray-700">4. ID2 (Tự động tổng hợp từ Thông tin QSDĐ)</label>
                 <textarea id="profile_id2" class="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" readonly rows="5"></textarea>
             </section>
 
             <!-- ID3, ID4 trên một hàng -->
-            <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4" style="display: none;">
                 <section class="p-4 border rounded-lg bg-gray-50">
                     <label for="profile_id3" class="block text-sm font-semibold text-gray-700">5. ID3 (Tự động - KH 1 & 2)</label>
                     <input type="text" id="profile_id3" class="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" readonly>
@@ -293,13 +293,13 @@
             </div>
             
             <!-- ID5 chiếm toàn bộ -->
-            <section class="p-4 border rounded-lg bg-gray-50 mt-4">
+            <section class="p-4 border rounded-lg bg-gray-50 mt-4" style="display: none;">
                 <label for="profile_id5" class="block text-sm font-semibold text-gray-700">7. ID5 (Tự động tổng hợp chi tiết QSDĐ)</label>
                 <textarea id="profile_id5" class="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" readonly rows="10"></textarea>
             </section>
 
             <!-- SECTION 8: ID6 (NEW) -->
-            <section class="p-4 border rounded-lg bg-gray-50 mt-4">
+            <section class="p-4 border rounded-lg bg-gray-50 mt-4" style="display: none;">
                 <label class="block text-sm font-semibold text-gray-700">8. ID6 (Tự động tổng hợp từ Bảng định giá)</label>
                 <div id="profile_id6_table" class="mt-4 table-container">
                     <!-- Bảng ID6 sẽ được chèn vào đây -->
@@ -317,31 +317,31 @@
             </section>
 
             <!-- SECTION 9: ID7 (NEW) -->
-            <section class="p-4 border rounded-lg bg-gray-50 mt-4">
+            <section class="p-4 border rounded-lg bg-gray-50 mt-4" style="display: none;">
                 <label for="profile_id7" class="block text-sm font-semibold text-gray-700">9. ID7 (Tự động tổng hợp Số GCN)</label>
                 <textarea id="profile_id7" class="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" readonly rows="3"></textarea>
             </section>
 
             <!-- SECTION 10: ID8 (NEW) -->
-            <section class="p-4 border rounded-lg bg-gray-50 mt-4">
+            <section class="p-4 border rounded-lg bg-gray-50 mt-4" style="display: none;">
                 <label for="profile_id8" class="block text-sm font-semibold text-gray-700">10. ID8 (Tự động tổng hợp Thời hạn sử dụng)</label>
                 <textarea id="profile_id8" class="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" readonly rows="4"></textarea>
             </section>
 
             <!-- SECTION 11: ID9 (NEW) -->
-            <section class="p-4 border rounded-lg bg-gray-50 mt-4">
+            <section class="p-4 border rounded-lg bg-gray-50 mt-4" style="display: none;">
                 <label for="profile_id9" class="block text-sm font-semibold text-gray-700">11. ID9 (Tự động tổng hợp chi tiết QSDĐ)</label>
                 <textarea id="profile_id9" class="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" readonly rows="15"></textarea>
             </section>
 
             <!-- SECTION 12: ID10 (NEW) -->
-            <section class="p-4 border rounded-lg bg-gray-50 mt-4">
+            <section class="p-4 border rounded-lg bg-gray-50 mt-4" style="display: none;">
                 <label for="profile_id10" class="block text-sm font-semibold text-gray-700">12. ID10 (Tự động tổng hợp TS Gắn liền với đất)</label>
                 <textarea id="profile_id10" class="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" readonly rows="15"></textarea>
             </section>
 
             <!-- SECTION 13: ID11 (MỚI) -->
-            <section class="p-4 border rounded-lg bg-gray-50 mt-4">
+            <section class="p-4 border rounded-lg bg-gray-50 mt-4" style="display: none;">
                 <label for="profile_id11_table" class="block text-sm font-semibold text-gray-700">13. ID11 (Bảng hồ sơ bàn giao)</label>
                 <div id="profile_id11_table" class="mt-4 table-container">
                     <!-- Bảng ID11 sẽ được chèn vào đây -->
@@ -372,7 +372,7 @@
                 <label for="valuation_d1" class="block text-sm font-semibold text-gray-700 mb-2">
                     D1: Giá trị mức cấp tín dụng tối đa so với giá trị TSBĐ
                 </label>
-                <input type="text" id="valuation_d1" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Nhập giá trị (ví dụ: 1.000.000)" inputmode="numeric">
+                <input type="text" id="valuation_d1" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Nhập giá trị (ví dụ: 1.200.000.000)" inputmode="numeric">
             </div>
 
             <!-- NEW D2 FIELD -->
@@ -2275,7 +2275,7 @@
                 // --- ADD THIS ---
                 const d1Input = document.getElementById('valuation_d1');
                 if (d1Input) {
-                    profile.valuation_d1 = parseFormattedNumber(d1Input.value) || ''; // MODIFIED: Lưu giá trị số thô
+                    profile.valuation_d1 = d1Input.value; // MODIFIED: Lưu giá trị đã định dạng (ví dụ: 1.200.000.000)
                 }
                 const d2Input = document.getElementById('valuation_d2'); // --- ADD THIS ---
                 if (d2Input) { // --- ADD THIS ---
