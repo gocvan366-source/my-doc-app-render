@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -129,6 +127,72 @@
         #profile_id11_table td:nth-child(5) { /* Ghi chú */
             width: 100px;
         }
+
+        /* Style cho bảng Định giá (MỚI) */
+        #valuation_table_container {
+            overflow-x: auto; /* Thêm cuộn ngang nếu bảng quá rộng */
+            border-radius: 0.5rem; /* Bo góc cho vùng cuộn */
+        }
+        #valuation_table_container table {
+            width: 100%;
+            min-width: 1200px; /* Đặt chiều rộng tối thiểu để các cột không bị bóp */
+            border-collapse: collapse;
+            border: 1px solid #ddd; /* Border cho toàn bộ bảng */
+        }
+        #valuation_table_container th, #valuation_table_container td {
+            border: 1px solid #ddd; /* Border cho từng ô */
+            padding: 8px;
+            text-align: left;
+            font-size: 0.875rem;
+            vertical-align: top; /* Căn lề trên cho đẹp */
+            white-space: nowrap; /* Giữ cho nội dung trên 1 hàng (trừ input) */
+        }
+        #valuation_table_container th {
+            background-color: #f4f5f7;
+            font-weight: 600;
+            position: sticky; /* Giữ header khi cuộn */
+            top: 0;
+            z-index: 10;
+        }
+        #valuation_table_container tfoot td {
+            font-weight: bold;
+            background-color: #f9fafb;
+            text-align: right; /* Căn phải cho footer */
+            white-space: nowrap;
+        }
+        #valuation_table_container tfoot td:first-child {
+            text-align: right; /* Đảm bảo ô "TỔNG CỘNG" cũng căn phải */
+        }
+        /* Style cho inputs trong bảng */
+        .valuation-input, .valuation-input-readonly {
+            width: 100%;
+            min-width: 100px; /* Đặt chiều rộng tối thiểu cho input */
+            padding: 4px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box; /* Quan trọng */
+            font-size: 0.875rem;
+        }
+        .valuation-input-readonly {
+            background-color: #eee;
+            color: #333;
+        }
+        /* Căn phải cho các input số và kết quả */
+        #valuation_table_container input[type="number"],
+        .valuation-input-readonly {
+            text-align: right;
+        }
+        /* Căn trái lại cho input loại đất */
+        #valuation_table_container td:nth-child(4) input {
+             text-align: left;
+        }
+        /* Điều chỉnh độ rộng cột */
+        #valuation_table_container th:nth-child(1) { width: 4%; } /* STT */
+        #valuation_table_container th:nth-child(2) { width: 10%; } /* GCN */
+        #valuation_table_container th:nth-child(3) { width: 5%; } /* Thêm */
+        #valuation_table_container th:nth-child(4) { width: 15%; } /* Loại Đất */
+        #valuation_table_container th:nth-child(12) { width: 5%; } /* Xóa */
+
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen p-4 md:p-8">
