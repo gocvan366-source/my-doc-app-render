@@ -9,8 +9,34 @@ const app = express();
 const PORT = process.env.PORT || 3000; // Render sẽ tự động cung cấp biến process.env.PORT
 
 // --- 1. Cấu hình Middleware ---
-app.use(cors()); // Cho phép frontend gọi API
-app.use(express.json()); // Đọc dữ liệu JSON từ req.body
+
+// --- ĐÂY LÀ PHẦN CẤU HÌNH CORS CỦA BẠN (Thay thế cho app.use(cors())) ---
+// 1. Định nghĩa danh sách các domain được phép
+const whitelist = ['https://autodoc-ctg.onrender.com'];
+
+// 2. Cấu hình CORS
+const corsOptions = {
+  origin: function (origin, callback) {
+    // 'origin' là domain của frontend đang cố gắng gọi
+    
+    // Kiểm tra xem 'origin' có trong whitelist không
+    // '!origin' cho phép các trường hợp như Postman hoặc các request không có origin
+    if (whitelist.indexOf(origin) !== -1 || !origin) {
+      // Nếu có, cho phép
+      callback(null, true);
+    } else {
+      // Nếu không, từ chối với lỗi
+      callback(new Error('Yêu cầu này không được phép bởi CORS'));
+    }
+  },
+  optionsSuccessStatus: 200 
+};
+
+// 3. Áp dụng cấu hình CORS này cho TẤT CẢ các route bên dưới
+app.use(cors(corsOptions));
+// --- KẾT THÚC PHẦN CẤU HÌNH CORS ---
+
+app.use(express.json()); // Đọc dữ liệu JSON từ req.body (Giữ nguyên từ file gốc của bạn)
 
 // Helper để tải tệp từ URL (vì template của bạn ở trên GitHub)
 const fetchTemplate = (url) => {
