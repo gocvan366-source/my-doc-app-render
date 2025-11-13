@@ -1640,7 +1640,7 @@
                     const base64Promises = files.map(file => fileToBase64(file));
                     const filesAsBase64 = await Promise.all(base64Promises);
                     
-                    const responseText = await callGeminiVisionForCccdAPI(filesAsBase64, GEMINI_API_KEY);
+                    const responseText = await callGeminiVisionForCccdAPI(filesAsBase64);
                     const customerData = JSON.parse(responseText);
                     
                     const profile = allProfiles.find(p => p.id === currentProfileId);
@@ -2837,7 +2837,6 @@ Cơ quan cấp:……., ngày…..tháng…..năm…..
             }
 
             extractBtn_QSDD.addEventListener('click', async () => {
-                const apiKey = GEMINI_API_KEY;
 
                 statusDiv_QSDD.classList.remove('hidden');
                 statusBox_QSDD.className = 'flex items-center justify-center bg-blue-50 p-3 rounded-lg text-blue-800';
@@ -2852,7 +2851,7 @@ Cơ quan cấp:……., ngày…..tháng…..năm…..
                     statusText_QSDD.textContent = `Đang phân tích ảnh ${i + 1}/${imageFiles_QSDD.length}: ${file.name}...`;
                     try {
                         const base64Data = await fileToBase64(file);
-                        const responseText = await callGeminiVisionAPI(base64Data, apiKey);
+                        const responseText = await callGeminiVisionAPI(base64Data);
                         const data = JSON.parse(responseText);
                         successfulResults.push({ fileName: file.name, data: data });
                     } catch (error) {
