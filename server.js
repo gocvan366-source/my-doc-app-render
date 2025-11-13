@@ -3,16 +3,36 @@ const cors = require('cors');
 const https = require('https');
 const PizZip = require('pizzip');
 const Docxtemplater = require('docxtemplater');
-const path = require('path'); // Dùng để phục vụ tệp app.html
+const path = require('path');
+const { GoogleGenerativeAI } = require("@google/generative-ai"); // Di chuyển lên đầu
+
+// Nạp file .env ở đầu tiên
+require('dotenv').config(); 
 
 const app = express();
-const PORT = process.env.PORT || 3000; // Render sẽ tự động cung cấp biến process.env.PORT
+const PORT = process.env.PORT || 3000;
 
-// --- 1. Cấu hình Middleware ---
+// --- 1. Cấu hình Middleware (TẤT CẢ GOM VỀ ĐÂY) ---
 app.use(cors()); // Cho phép frontend gọi API
-app.use(express.json()); // Đọc dữ liệu JSON từ req.body
 
-// Helper để tải tệp từ URL (vì template của bạn ở trên GitHub)
+// DÙNG DÒNG NÀY (50MB) VÀ XÓA 2 DÒNG CŨ
+// Dòng này phải đứng TRƯỚC TẤT CẢ các route (app.post, app.get)
+app.use(express.json({ limit: '50mb' }));
+// (Bạn cũng có thể cần dòng này cho các form data, thêm vào không hại)
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
+
+// --- 2. Khởi tạo Google AI ---
+if (!process.env.GEMINI_API_KEY) {
+    console.error("LỖI: GEMINI_API_KEY chưa được thiết lập trong .env hoặc biến môi trường Render");
+}
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+
+
+// --- 3. Các Hàm Helper ---
+
+// Helper để tải tệp từ URL (cho /generate-docx)
 const fetchTemplate = (url) => {
     return new Promise((resolve, reject) => {
         https.get(url, (res) => {
@@ -26,8 +46,19 @@ const fetchTemplate = (url) => {
     });
 };
 
-// --- 2. Tạo Route API ---
-// Đây là route mà app.html sẽ gọi
+// Helper cho Google AI
+function filesToGenerativeParts(filesBase64, mimeType = "image/jpeg") {
+  return filesBase64.map(base64Data => ({
+    inlineData: {
+      data: base64Data,
+      mimeType
+    }
+  }));
+}
+
+// --- 4. Tạo Route API ---
+
+// Route tạo DOCX
 app.post('/generate-docx', async (req, res) => {
     try {
         const { templateUrl, data } = req.body;
@@ -36,11 +67,9 @@ app.post('/generate-docx', async (req, res) => {
             return res.status(400).json({ error: 'Thiếu `templateUrl` hoặc `data`' });
         }
 
-        // Tải template
         const templateBuffer = await fetchTemplate(templateUrl);
         const zip = new PizZip(templateBuffer);
 
-        // Điền dữ liệu
         const doc = new Docxtemplater(zip, {
             paragraphLoop: true,
             linebreaks: true,
@@ -49,13 +78,11 @@ app.post('/generate-docx', async (req, res) => {
         doc.setData(data);
         doc.render();
 
-        // Tạo buffer đầu ra
         const outputBuffer = doc.getZip().generate({
             type: 'nodebuffer',
             compression: 'DEFLATE',
         });
 
-        // Gửi tệp về cho client
         res.setHeader('Content-Disposition', 'attachment; filename="generated_doc.docx"');
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
         res.status(200).send(outputBuffer);
@@ -69,51 +96,10 @@ app.post('/generate-docx', async (req, res) => {
     }
 });
 
-// --- 3. Route phục vụ APP.HTML (Frontend) ---
-// Gửi tệp app.html khi người dùng truy cập URL gốc
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'app.html'));
-});
-
-// --- 4. Khởi động Máy chủ ---
-app.listen(PORT, () => {
-    console.log(`Máy chủ đang lắng nghe tại cổng ${PORT}`);
-});
-// --- BẮT ĐẦU PHẦN THÊM MỚI ---
-
-// 1. Nạp các thư viện cần thiết
-require('dotenv').config(); // Nạp file .env ở đầu tiên
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-
-// 2. Tăng giới hạn payload cho JSON (RẤT QUAN TRỌNG VÌ BASE64 RẤT LỚN)
-// Hãy chắc chắn bạn có dòng này và nó phải nằm TRƯỚC các app.post()
-// Nếu bạn đã có app.use(express.json()), hãy thay thế nó bằng dòng này:
-app.use(express.json({ limit: '50mb' })); 
-// (Bạn cũng có thể cần app.use(express.urlencoded({ limit: '50mb', extended: true }));)
-
-
-// 3. Khởi tạo Google AI
-if (!process.env.GEMINI_API_KEY) {
-    console.error("LỖI: GEMINI_API_KEY chưa được thiết lập trong file .env");
-}
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" }); // Cập nhật model nếu cần
-
-// --- HÀM HELPER CHUYỂN ĐỔI ---
-// Hàm này tạo 'parts' cho Google AI SDK từ mảng base64
-function filesToGenerativeParts(filesBase64, mimeType = "image/jpeg") {
-  return filesBase64.map(base64Data => ({
-    inlineData: {
-      data: base64Data,
-      mimeType
-    }
-  }));
-}
-
-// 4. Tạo API Endpoint cho CCCD
+// API Endpoint cho CCCD
 app.post('/api/ocr-cccd', async (req, res) => {
     try {
-        const { filesAsBase64 } = req.body; // Lấy mảng base64 từ request
+        const { filesAsBase64 } = req.body;
         if (!filesAsBase64 || filesAsBase64.length === 0) {
             return res.status(400).json({ error: "Không có file nào được tải lên." });
         }
@@ -122,7 +108,6 @@ app.post('/api/ocr-cccd', async (req, res) => {
 
         const imageParts = filesToGenerativeParts(filesAsBase64);
         
-        // Tạo nội dung request cho SDK
         const contents = [{ 
             parts: [
                 { text: prompt }, 
@@ -134,7 +119,6 @@ app.post('/api/ocr-cccd', async (req, res) => {
         const response = await result.response;
         const text = response.text();
         
-        // Trả về text chứa JSON cho client
         res.json({ text: text }); 
 
     } catch (e) {
@@ -143,15 +127,14 @@ app.post('/api/ocr-cccd', async (req, res) => {
     }
 });
 
-// 5. Tạo API Endpoint cho QSDĐ (Sổ đỏ)
+// API Endpoint cho QSDĐ (Sổ đỏ)
 app.post('/api/ocr-qsdd', async (req, res) => {
     try {
-        const { base64Data } = req.body; // Lấy 1 chuỗi base64 từ request
+        const { base64Data } = req.body;
         if (!base64Data) {
             return res.status(400).json({ error: "Không có file nào được tải lên." });
         }
 
-        // Dán prompt QSDĐ của bạn vào đây
         const prompt = `Bạn là một trợ lý AI chuyên nghiệp, nhiệm vụ của bạn là phân tích hình ảnh Giấy chứng nhận Quyền sử dụng đất (GCN) của Việt Nam và trả về một đối tượng JSON DUY NHẤT.
 **QUY TRÌNH BẮT BUỘC:**
 1.  **Phân tích "Thửa đất":**
@@ -198,7 +181,6 @@ app.post('/api/ocr-qsdd', async (req, res) => {
         const response = await result.response;
         const text = response.text();
         
-        // Trả về text chứa JSON cho client
         res.json({ text: text }); 
 
     } catch (e) {
@@ -207,4 +189,26 @@ app.post('/api/ocr-qsdd', async (req, res) => {
     }
 });
 
-// --- KẾT THÚC PHẦN THÊM MỚI ---
+
+// --- 5. Route phục vụ APP.HTML (Frontend) ---
+app.get('/', (req, res) => {
+    // Giả sử app.html nằm cùng thư mục với server.js
+    res.sendFile(path.join(__dirname, 'app.html'));
+});
+
+// Route test key (bạn có thể giữ lại để kiểm tra)
+app.get('/test-key', (req, res) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (apiKey && apiKey.length > 10) {
+        res.send(`Key đã được nạp. Bắt đầu bằng: ${apiKey.substring(0, 8)}...`);
+    } else {
+        console.log('NGƯỜI DÙNG ĐÃ TEST /test-key: Không tìm thấy API Key!');
+        res.status(500).send('Lỗi: Không tìm thấy GEMINI_API_KEY trên server.');
+    }
+});
+
+
+// --- 6. Khởi động Máy chủ ---
+app.listen(PORT, () => {
+    console.log(`Máy chủ đang lắng nghe tại cổng ${PORT}`);
+});
