@@ -2679,7 +2679,7 @@ Cơ quan cấp:……., ngày…..tháng…..năm…..
 
             resetBtn_QSDD.addEventListener('click', resetUI_QSDD);
 
-            async function callGeminiVisionAPI(base64Data, apiKey) {
+            async function callGeminiVisionAPI(base64Data) {
                 // Sửa lỗi API URL
                 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
                 
