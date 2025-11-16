@@ -2744,7 +2744,7 @@ Cơ quan cấp:……., ngày…..tháng…..năm…..
                     const result = JSON.parse(responseBodyText);
                     // --- END FIX ---
                     
-                    const result = await response.json(); // Parse từ text đã lấy
+                  
 			const rawText = result.text; // Lấy text trực tiếp từ phản hồi của server
 			if (!rawText) {
     			throw new Error("Phản hồi từ API không có nội dung hợp lệ (QSDĐ).");
@@ -2841,7 +2841,6 @@ Cơ quan cấp:……., ngày…..tháng…..năm…..
             }
 
             extractBtn_QSDD.addEventListener('click', async () => {
-                const apiKey = GEMINI_API_KEY;
 
                 statusDiv_QSDD.classList.remove('hidden');
                 statusBox_QSDD.className = 'flex items-center justify-center bg-blue-50 p-3 rounded-lg text-blue-800';
