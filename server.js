@@ -161,7 +161,7 @@ app.post('/api/gemini-qsdd', async (req, res) => {
     * \`so_vao_so_cap_gcn\`: Tìm "Số vào sổ cấp GCN". Nhập số vào sổ GCN là dữ liệu sau dòng "Số vào sổ cấp giấy chứng nhận" hoặc "Số vào sổ cấp GCN" (ví dụ: "CN 179", "00504/QSDĐ/LA", "CS02952", "H00460/NQSDĐ", "CH 00149", "H02321").
     * \`noi_cap_gcn\`: Tìm nơi cấp GCN. Trích xuất đầy đủ tên cơ quan (ví dụ: "Uỷ ban nhân dân huyện Tân Thạnh", "Sở Tài nguyên và Môi trường tỉnh Long An").
     * \`ngay_cap_gcn\`: Tìm ngày cấp GCN. Trích xuất đầy đủ (ví dụ: "ngày 20 tháng 05 năm 2020").
-    * \`so_thua\`: Tìm số thửa đất. Nhập số thửa đất chính của chủ sở hữu. Nếu hình ảnh GCN có nhiều thửa chia theo hàng và cột, hãy xác định các số thửa đó và nhập số các thửa đất vào cách nhau bằng dấu "," (ví dụ: "31, 51, 43").
+    * \`so_thua\`: Tìm số thửa đất. Nhập số thửa đất chính của chủ sở hữu. Nếu hình ảnh GCN có phần "4.Thông tin về các  thửa đất" gồm nhiều thửa chia theo hàng và cột, hãy tập trung xác định các số thửa đó trong cột "Thửa đất số" và nhập số các thửa đất vào cách nhau bằng dấu "," (ví dụ: "31, 51, 43").
     * \`to_ban_do\`: Tìm "Tờ bản đồ số".
     * \`dia_chi\`: Tìm "Địa chỉ thửa đất". ƯU TIÊN lấy phần dữ liệu có dạng "xã....tỉnh...." hoặc "xã....huyện....tỉnh....". Sau đó, nếu có thông tin "Ấp" riêng lẻ, hãy kết hợp nó vào (ví dụ: "Ấp..., xã..., huyện..., tỉnh..."). BẮT BUỘC PHẢI CÓ "xã" và "tỉnh" trong kết quả cuối cùng. Ghi đầy đủ trên cùng 1 hàng.
     * \`dien_tich\`: Tìm "Diện tích". Ghi rõ số và đơn vị (ví dụ: "125,5 m²"). Nếu GCN có nhiều thửa đất nằm trong bảng gồm nhiều cột và hàng và hình ảnh có số diện tích tổng thì lấy số đó, nếu chưa có diện tích tổng thì cộng diện tích các thửa trong bảng lại.
