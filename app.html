@@ -539,7 +539,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             // DÁN API KEY CỦA BẠN TỪ GOOGLE AI STUDIO VÀO ĐÂY
             // Ví dụ: const GEMINI_API_KEY = 'AIzaSy...';
-            const GEMINI_API_KEY = 'AIzaSyAhcNsbkIiQU6thWwJZbQW1ysAaHoThhCk';
             const STORAGE_KEY = 'customerProfiles_v1';
             let allProfiles = [];
             let currentProfileId = null;
@@ -1588,9 +1587,9 @@
                 reader.onerror = error => reject(error);
             });
 
-            async function callGeminiVisionForCccdAPI(filesAsBase64, apiKey) {
+            async function callGeminiVisionForCccdAPI(filesAsBase64) {
                 // Sửa lỗi API URL
-                const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+                const API_URL = '/api/gemini-cccd';
                 const prompt = `Bạn là một trợ lý AI chuyên nghiệp, nhiệm vụ của bạn là phân tích hình ảnh Căn cước công dân (CCCD) của Việt Nam (có thể là mặt trước và mặt sau) và trả về dữ liệu có cấu trúc JSON. Hãy trích xuất các thông tin sau: "ho_ten", "so_cccd", "ngay_sinh", "gioi_tinh", "noi_thuong_tru", "ngay_cap", "noi_cap", "ngay_het_han". Trường "noi_cap" (Nơi cấp) thường nằm ở mặt sau, gần ngày cấp. Gộp thông tin từ các ảnh nếu cần. ĐỊNH DẠNG ĐẦU RA: Phản hồi của bạn BẮT BUỘC chỉ được chứa đối tượng JSON, không có văn bản giải thích hay định dạng markdown. Nếu không tìm thấy thông tin cho một trường, hãy trả về một chuỗi rỗng "".`;
 
                 const parts = [{ text: prompt }];
@@ -1600,7 +1599,7 @@
                     });
                 });
 
-                const payload = { contents: [{ parts: parts }] };
+                const payload = { filesAsBase64: filesAsBase64 };
 
                 const response = await fetch(API_URL, {
                     method: 'POST',
@@ -1612,11 +1611,12 @@
                     throw new Error(`Lỗi API CCCD: ${errorBody.error?.message || response.statusText}`);
                 }
                 const result = await response.json();
-                const rawText = result.candidates?.[0]?.content?.parts?.[0]?.text;
-                if (!rawText) {
-                    throw new Error("Phản hồi API CCCD không hợp lệ.");
-                }
-                return rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+		const rawText = result.text; // Lấy text trực tiếp từ phản hồi của server
+		if (!rawText) {
+    		throw new Error("Phản hồi từ server không hợp lệ (CCCD).");
+		}
+		// Server đã xử lý, chỉ cần trả về
+		return rawText;
             }
 
 
@@ -1641,7 +1641,7 @@
                     const base64Promises = files.map(file => fileToBase64(file));
                     const filesAsBase64 = await Promise.all(base64Promises);
                     
-                    const responseText = await callGeminiVisionForCccdAPI(filesAsBase64, GEMINI_API_KEY);
+                    const responseText = await callGeminiVisionForCccdAPI(filesAsBase64);
                     const customerData = JSON.parse(responseText);
                     
                     const profile = allProfiles.find(p => p.id === currentProfileId);
@@ -2680,9 +2680,9 @@ Cơ quan cấp:……., ngày…..tháng…..năm…..
 
             resetBtn_QSDD.addEventListener('click', resetUI_QSDD);
 
-            async function callGeminiVisionAPI(base64Data, apiKey) {
+            async function callGeminiVisionAPI(base64Data) {
                 // Sửa lỗi API URL
-                const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+                const API_URL = '/api/gemini-qsdd';
                 
                 // Cập nhật prompt với quy tắc mới nhất
                 const prompt = `Bạn là một trợ lý AI chuyên nghiệp, nhiệm vụ của bạn là phân tích hình ảnh Giấy chứng nhận Quyền sử dụng đất (GCN) của Việt Nam và trả về một đối tượng JSON DUY NHẤT.
@@ -2713,7 +2713,7 @@ Cơ quan cấp:……., ngày…..tháng…..năm…..
 * Tất cả các trường phải nằm trong MỘT đối tượng JSON duy nhất.
 * Nếu không tìm thấy thông tin cho một trường, hãy trả về một chuỗi rỗng "".`;
                 
-                const payload = { contents: [{ parts: [{ text: prompt }, { inline_data: { mime_type: "image/jpeg", data: base64Data } }] }] };
+                const payload = { base64Data: base64Data };
                 
                 try {
                     const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
@@ -2737,17 +2737,20 @@ Cơ quan cấp:……., ngày…..tháng…..năm…..
                         }
                         // --- END FIX ---
                         const errorMessage = errorBody.error?.message || response.statusText;
-                        if (errorMessage.includes('API key not valid')) { throw new Error('API Key không hợp lệ hoặc đã hết hạn.'); }
-                        throw new Error(`Lỗi từ API: ${errorMessage}`);
+                       throw new Error(`Lỗi từ API: ${errorMessage}`);
                     }
                     
                     // --- START FIX: Parse từ text đã lấy ---
                     const result = JSON.parse(responseBodyText);
                     // --- END FIX ---
                     
-                    if (!result.candidates || !result.candidates[0].content.parts[0].text) { throw new Error("Phản hồi từ API không có nội dung hợp lệ."); }
-                    const rawText = result.candidates[0].content.parts[0].text;
-                    return rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+                    const result = await response.json(); // Parse từ text đã lấy
+			const rawText = result.text; // Lấy text trực tiếp từ phản hồi của server
+			if (!rawText) {
+    			throw new Error("Phản hồi từ API không có nội dung hợp lệ (QSDĐ).");
+			}
+			// Server đã xử lý, chỉ cần trả về
+			return rawText;
                 } catch(e) {
                     throw new Error(`Không thể kết nối đến API. Lỗi: ${e.message}`);
                 }
@@ -2853,7 +2856,7 @@ Cơ quan cấp:……., ngày…..tháng…..năm…..
                     statusText_QSDD.textContent = `Đang phân tích ảnh ${i + 1}/${imageFiles_QSDD.length}: ${file.name}...`;
                     try {
                         const base64Data = await fileToBase64(file);
-                        const responseText = await callGeminiVisionAPI(base64Data, apiKey);
+                        const responseText = await callGeminiVisionAPI(base64Data);
                         const data = JSON.parse(responseText);
                         successfulResults.push({ fileName: file.name, data: data });
                     } catch (error) {
