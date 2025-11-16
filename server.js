@@ -8,7 +8,7 @@ const path = require('path');
 // --- START: THÊM API KEY VÀO ĐÂY ---
 // Đây là API key bạn đã xóa từ app.html
 // Tốt nhất, bạn nên đặt cái này làm Biến Môi trường (Environment Variable) trên Render
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'AIzaSyAhcNsbkIiQU6thWwJZbQW1ysAaHoThhCk';
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY; // XÓA key dự phòng
 // --- END: THÊM API KEY ---
 
 const app = express();
@@ -52,6 +52,13 @@ const fetchTemplate = (url) => {
  */
 const callGemini = (payload) => {
     return new Promise((resolve, reject) => {
+        // THÊM: Kiểm tra xem API key có tồn tại không
+        if (!GEMINI_API_KEY) {
+            console.error('Lỗi nghiêm trọng: Biến môi trường GEMINI_API_KEY chưa được thiết lập trên server.');
+            return reject(new Error('Lỗi: Biến môi trường GEMINI_API_KEY chưa được thiết lập trên server.'));
+        }
+        // KẾT THÚC THÊM
+
         const model = 'gemini-2.5-flash-preview-09-2025';
         const apiPath = `/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
         
