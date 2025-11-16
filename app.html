@@ -305,7 +305,7 @@
                     <label for="uploader" id="upload-label" class="cursor-pointer">
                         <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true"><path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                         <span class="mt-2 block text-sm font-medium text-gray-900">Nhấn để tải ảnh sổ đỏ</span>
-                        <span class="mt-1 block text-xs text-gray-500">Đã chọn: <span id="file-count">0</span>/10</span>
+                        <span class="mt-1 block text-xs text-gray-500">Đã chọn: <span id="file-count">0</span>/2</span>
                     </label>
                     <div id="preview-grid" class="mt-4 grid grid-cols-4 sm:grid-cols-6 md:grid-cols-10 gap-4"></div>
                 </div>
@@ -2628,7 +2628,7 @@ Cơ quan cấp:……., ngày…..tháng…..năm…..
 
             let imageFiles_QSDD = [];
             let latestExtractionData_QSDD = null;
-            const MAX_FILES_QSDD = 10;
+            const MAX_FILES_QSDD = 2;
 
             const updateButtonStates_QSDD = () => {
                 extractBtn_QSDD.disabled = !(imageFiles_QSDD.length > 0);
