@@ -15,7 +15,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // --- 1. Cấu hình Middleware ---
-const whitelist = ['https://autodoc-ctg.onrender.com'];
+const whitelist = [
+    'https://autodoc-ctg.onrender.com', // URL backend (cho phép tự gọi chính nó)
+    'https://autodoc-tsdb.web.app'      // URL frontend mới của bạn
+];
 const corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1 || !origin) {
