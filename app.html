@@ -2441,9 +2441,6 @@ Cơ quan cấp:……., ngày…..tháng…..năm…..
                 // Nếu không khớp, trả về loại đất gốc (đã trim)
                 return landType.trim(); 
             }
-
-            function renderValuationTable() {
-                // ... (phần còn lại của hàm renderValuationTable bắt đầu từ đây)
             function renderValuationTable() {
                 const profile = allProfiles.find(p => p.id === currentProfileId);
                 valuationTableContainer.innerHTML = '';
