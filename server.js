@@ -156,7 +156,7 @@ app.post('/api/gemini-qsdd', async (req, res) => {
         const prompt = `Bạn là một trợ lý AI chuyên nghiệp, nhiệm vụ của bạn là phân tích hình ảnh Giấy chứng nhận Quyền sử dụng đất (GCN) của Việt Nam và trả về một đối tượng JSON DUY NHẤT.
 **QUY TRÌNH BẮT BUỘC:**
 1.  **Phân tích "Thửa đất":**
-    * \`ten_gcn\`: Tìm dòng chữ "GIẤY CHỨNG NHẬN". Trích xuất toàn bộ dòng chữ nằm **ngay bên dưới** nó (ví dụ: "QUYỀN SỬ DỤNG ĐẤT", "QUYỀN SỞ HỮU NHÀ Ở VÀ TÀI SẢN KHÁC GẮN LIỀN VỚI ĐẤT").
+    * \`ten_gcn\`: Tìm dòng chữ "GIẤY CHỨNG NHẬN". Trích xuất toàn bộ dòng chữ VIẾT HOA nằm **ngay bên dưới** nó (ví dụ: "QUYỀN SỬ DỤNG ĐẤT", "QUYỀN SỬ DỤNG ĐẤT QUYỀN SỞ HỮU NHÀ Ở VÀ TÀI SẢN KHÁC GẮN LIỀN VỚI ĐẤT", "QUYỀN SỬ DỤNG ĐẤT, QUYỀN SỞ HỮU TÀI SẢN GẮN LIỀN VỚI ĐẤT).
     * \`so_gcn\`: Tìm mã số của GCN. Mã số GCN là một chuỗi có định dạng "1 chữ cái + 6 số", "2 chữ cái + 6 số", hoặc "2 chữ cái + 8 số" (ví dụ: "Đ 519908", "BO 007850", "AA 04352588").
     * \`so_vao_so_cap_gcn\`: Tìm "Số vào sổ cấp GCN". Nhập số vào sổ GCN là dữ liệu sau dòng "Số vào sổ cấp giấy chứng nhận" hoặc "Số vào sổ cấp GCN" (ví dụ: "CN 179", "00504/QSDĐ/LA", "CS02952", "H00460/NQSDĐ", "CH 00149", "H02321").
     * \`noi_cap_gcn\`: Tìm nơi cấp GCN. Trích xuất đầy đủ tên cơ quan (ví dụ: "Uỷ ban nhân dân huyện Tân Thạnh", "Sở Tài nguyên và Môi trường tỉnh Long An").
