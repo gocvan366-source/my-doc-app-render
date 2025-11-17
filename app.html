@@ -2420,7 +2420,30 @@ Cơ quan cấp:……., ngày…..tháng…..năm…..
 
                 saveAllProfilesToStorage();
             }
+		// --- HÀM MỚI: Dùng để viết tắt loại đất cho bảng định giá ---
+            function getLandTypeAbbreviation(landType) {
+                if (!landType) return '';
+                const normalized = landType.toLowerCase().trim();
+                
+                if (normalized === 'đất chuyên trồng lúa nước' || normalized === 'đất chuyên trồng lúa' || normalized === 'đất lúa') {
+                    return 'Lúa';
+                }
+                if (normalized === 'đất trồng cây lâu năm') {
+                    return 'CLN';
+                }
+                if (normalized === 'đất ở đô thị') {
+                    return 'ODT';
+                }
+                if (normalized === 'đất ở nông thôn') {
+                    return 'ONT';
+                }
+                
+                // Nếu không khớp, trả về loại đất gốc (đã trim)
+                return landType.trim(); 
+            }
 
+            function renderValuationTable() {
+                // ... (phần còn lại của hàm renderValuationTable bắt đầu từ đây)
             function renderValuationTable() {
                 const profile = allProfiles.find(p => p.id === currentProfileId);
                 valuationTableContainer.innerHTML = '';
