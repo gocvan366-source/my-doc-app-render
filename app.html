@@ -2544,19 +2544,34 @@ Cơ quan cấp:……., ngày…..tháng…..năm…..
                     
                     profile.qsddRecords.forEach((record) => {
                         const soGCN_display = record.so_gcn || 'N/A';
-                        const mucDich = (record.muc_dich_su_dung || '').toLowerCase();
-                        const loaiNhaO = record.loai_nha_o || '';
+
+                        // --- BẮT ĐẦU LOGIC MỚI ĐÃ SỬA ---
+                        const mucDichRaw = record.muc_dich_su_dung || '';
+                        const loaiNhaORaw = record.loai_nha_o || '';
                         
-                        const landTypes = new Set();
-                        if (mucDich.includes('lúa')) landTypes.add('Lúa');
-                        if (mucDich.includes('thổ') || mucDich.includes('đất ở') || mucDich.includes('odt')) landTypes.add('Thổ');
-                        if (mucDich.includes('cây lâu năm') || mucDich.includes('cln')) landTypes.add('CLN');
-                        if (mucDich.includes('trồng cây')) landTypes.add('Đất trồng cây');
-                        if (mucDich.includes('thủy sản')) landTypes.add('Nuôi trồng thủy sản');
-                        if (mucDich.includes('sản xuất kinh doanh') || mucDich.includes('skc')) landTypes.add('SKC');
-                        if (loaiNhaO !== '' && loaiNhaO !== 'N/A') landTypes.add('Nhà ở');
-                        if (landTypes.size === 0 && mucDich !== '') landTypes.add(record.muc_dich_su_dung);
-                        if (landTypes.size === 0) landTypes.add('Đất');
+                        // Sử dụng Set để tránh trùng lặp
+                        const landTypes = new Set(); 
+
+                        // 1. Phân tích từ "Mục đích sử dụng"
+                        if (mucDichRaw.trim() !== '' && mucDichRaw.trim() !== 'N/A') {
+                            // Tách các loại đất bằng dấu phẩy
+                            mucDichRaw.split(',').forEach(type => {
+                                // Sử dụng hàm viết tắt mới
+                                const mappedType = getLandTypeAbbreviation(type); 
+                                if (mappedType) landTypes.add(mappedType);
+                            });
+                        }
+
+                        // 2. Thêm "Nhà ở" nếu có
+                        if (loaiNhaORaw.trim() !== '' && loaiNhaORaw.trim() !== 'N/A') {
+                            landTypes.add('Nhà ở');
+                        }
+
+                        // 3. Xử lý trường hợp không có loại đất nào
+                        if (landTypes.size === 0) {
+                            landTypes.add('Đất'); // Tạo 1 hàng mặc định
+                        }
+                        // --- KẾT THÚC LOGIC MỚI ĐÃ SỬA ---
 
                         const typesArray = Array.from(landTypes);
                         const numRowsForGCN = typesArray.length;
