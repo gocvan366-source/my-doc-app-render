@@ -12,7 +12,11 @@ const PORT = process.env.PORT || 3000; // Render sẽ tự động cung cấp bi
 
 // --- ĐÂY LÀ PHẦN CẤU HÌNH CORS CỦA BẠN (Thay thế cho app.use(cors())) ---
 // 1. Định nghĩa danh sách các domain được phép
-const whitelist = ['https://autodoc-ctg.onrender.com'];
+// Đã thêm 'https://autodoc-tsdb.web.app' vào danh sách
+const whitelist = [
+  'https://autodoc-ctg.onrender.com', 
+  'https://autodoc-tsdb.web.app'
+];
 
 // 2. Cấu hình CORS
 const corsOptions = {
@@ -26,6 +30,7 @@ const corsOptions = {
       callback(null, true);
     } else {
       // Nếu không, từ chối với lỗi
+      console.error(`Blocked by CORS: ${origin}`); // Log thêm để dễ debug
       callback(new Error('Yêu cầu này không được phép bởi CORS'));
     }
   },
@@ -36,7 +41,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 // --- KẾT THÚC PHẦN CẤU HÌNH CORS ---
 
-app.use(express.json()); // Đọc dữ liệu JSON từ req.body (Giữ nguyên từ file gốc của bạn)
+app.use(express.json()); // Đọc dữ liệu JSON từ req.body
 
 // Helper để tải tệp từ URL (vì template của bạn ở trên GitHub)
 const fetchTemplate = (url) => {
