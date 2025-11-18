@@ -225,7 +225,7 @@
                     </div>
                     <div>
                         <label for="so_hop_dong_hs" class="block text-sm font-medium text-gray-700">Số hợp đồng</label>
-                        <input type="text" id="so_hop_dong_hs" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="nhập số HĐTC ví dụ : 2599.0001">
+                        <input type="text" id="so_hop_dong_hs" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="123/2025/HĐTC">
                     </div>
                     <div>
                         <label for="ngay_ky_hs" class="block text-sm font-medium text-gray-700">Ngày ký HĐTC</label>
@@ -571,10 +571,11 @@
         document.addEventListener('DOMContentLoaded', () => {
             // DÁN API KEY CỦA BẠN TỪ GOOGLE AI STUDIO VÀO ĐÂY
             // Ví dụ: const GEMINI_API_KEY = 'AIzaSy...';
+            const GEMINI_API_KEY = 'AIzaSyAhcNsbkIiQU6thWwJZbQW1ysAaHoThhCk';
             const STORAGE_KEY = 'customerProfiles_v1';
             let allProfiles = [];
             let currentProfileId = null;
-	     // --- HÀM SỬA ĐỔI: Định dạng YYYY-MM-DD sang "Ngày DD tháng MM năm YYYY" ---
+	// --- HÀM SỬA ĐỔI: Định dạng YYYY-MM-DD sang "Ngày DD tháng MM năm YYYY" ---
             function formatInputDate(dateStr) {
                 if (!dateStr) return 'Ngày......tháng.....năm...........'; // Trả về mặc định nếu rỗng
                 try {
@@ -609,7 +610,7 @@
                     console.error("Lỗi chuyển đổi ngày hiển thị:", e);
                     return ''; // Trả về rỗng nếu lỗi
                 }
-            }	
+            }
             // --- DOM Elements ---
             const pageProfileList = document.getElementById('page_profile_list');
             const pageProfileDetails = document.getElementById('page_profile_details');
@@ -688,6 +689,7 @@
             const bankTT8 = document.getElementById('bank_tt8');
             // KẾT THÚC TT7 & TT8
             const bankTT9 = document.getElementById('bank_tt9'); // TT9 MỚI
+	
 	// --- NEW: Edit Profile Modal Elements ---
             const modalEditProfile = document.getElementById('modal_edit_profile');
             const btnCloseEditModal = document.getElementById('btn_close_edit_modal');
@@ -848,7 +850,7 @@
                     if (profile.valuation_d2 === undefined) { // Check for undefined
                         profile.valuation_d2 = ''; // Add this
                     }
-			// --- BẮT ĐẦU THÊM MỚI ---
+                // --- BẮT ĐẦU THÊM MỚI ---
                     // Logic chuyển đổi dữ liệu cũ (sdt) sang dữ liệu mới (soHopDong)
                     if (profile.sdt) { 
                         if (!profile.soHopDong) { 
@@ -863,7 +865,7 @@
                         profile.ngayKyHDTC = 'Ngày......tháng.....năm...........';
                     }
                     // --- KẾT THÚC THÊM MỚI ---
-                });
+		});
             }
 
             function renderProfileList() {
@@ -1091,6 +1093,7 @@
                     }
                 );
             });
+
 // --- NEW: Edit/Delete Profile Logic ---
 
             window.openEditProfileModal = function(profileId) {
@@ -1160,6 +1163,7 @@
             // Thêm listeners cho modal mới
             btnCloseEditModal.addEventListener('click', closeEditProfileModal);
             btnSaveEditProfile.addEventListener('click', saveProfileChanges);
+
             // --- Bank Info Modal Logic ---
             function showBankModal() {
                 const profile = allProfiles.find(p => p.id === currentProfileId);
@@ -1334,8 +1338,9 @@
                         // KẾT THÚC TT7 & TT8
                         TT9: profile.bankInfo.tt9 || '', // TT9 MỚI
                         // Thêm các trường khác nếu mẫu của bạn cần
-                        // Ví dụ: Tên hồ sơ, SĐT
+                        // Ví dụ: Tên hồ sơ
                         HO_TEN_HS: profile.hoTen,
+                        // SDT_HS: profile.sdt, // ĐÃ BỎ
                         SO_HOP_DONG: profile.soHopDong || '', // THÊM MỚI
                         NGAY_KY_HDTC: profile.ngayKyHDTC || 'Ngày......tháng.....năm...........', // THÊM MỚI
                         
@@ -1761,9 +1766,9 @@
                 reader.onerror = error => reject(error);
             });
 
-            async function callGeminiVisionForCccdAPI(filesAsBase64) {
+            async function callGeminiVisionForCccdAPI(filesAsBase64, apiKey) {
                 // Sửa lỗi API URL
-                const API_URL = '/api/gemini-cccd';
+                const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
                 const prompt = `Bạn là một trợ lý AI chuyên nghiệp, nhiệm vụ của bạn là phân tích hình ảnh Căn cước công dân (CCCD) của Việt Nam (có thể là mặt trước và mặt sau) và trả về dữ liệu có cấu trúc JSON. Hãy trích xuất các thông tin sau: "ho_ten", "so_cccd", "ngay_sinh", "gioi_tinh", "noi_thuong_tru", "ngay_cap", "noi_cap", "ngay_het_han". Trường "noi_cap" (Nơi cấp) thường nằm ở mặt sau, gần ngày cấp. Gộp thông tin từ các ảnh nếu cần. ĐỊNH DẠNG ĐẦU RA: Phản hồi của bạn BẮT BUỘC chỉ được chứa đối tượng JSON, không có văn bản giải thích hay định dạng markdown. Nếu không tìm thấy thông tin cho một trường, hãy trả về một chuỗi rỗng "".`;
 
                 const parts = [{ text: prompt }];
@@ -1773,7 +1778,7 @@
                     });
                 });
 
-                const payload = { filesAsBase64: filesAsBase64 };
+                const payload = { contents: [{ parts: parts }] };
 
                 const response = await fetch(API_URL, {
                     method: 'POST',
@@ -1785,12 +1790,11 @@
                     throw new Error(`Lỗi API CCCD: ${errorBody.error?.message || response.statusText}`);
                 }
                 const result = await response.json();
-		const rawText = result.text; // Lấy text trực tiếp từ phản hồi của server
-		if (!rawText) {
-    		throw new Error("Phản hồi từ server không hợp lệ (CCCD).");
-		}
-		// Server đã xử lý, chỉ cần trả về
-		return rawText;
+                const rawText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (!rawText) {
+                    throw new Error("Phản hồi API CCCD không hợp lệ.");
+                }
+                return rawText.replace(/```json/g, '').replace(/```/g, '').trim();
             }
 
 
@@ -1815,7 +1819,7 @@
                     const base64Promises = files.map(file => fileToBase64(file));
                     const filesAsBase64 = await Promise.all(base64Promises);
                     
-                    const responseText = await callGeminiVisionForCccdAPI(filesAsBase64);
+                    const responseText = await callGeminiVisionForCccdAPI(filesAsBase64, GEMINI_API_KEY);
                     const customerData = JSON.parse(responseText);
                     
                     const profile = allProfiles.find(p => p.id === currentProfileId);
@@ -2594,7 +2598,7 @@ Cơ quan cấp:……., ngày…..tháng…..năm…..
 
                 saveAllProfilesToStorage();
             }
-		// --- HÀM MỚI: Dùng để viết tắt loại đất cho bảng định giá ---
+// --- HÀM MỚI: Dùng để viết tắt loại đất cho bảng định giá ---
             function getLandTypeAbbreviation(landType) {
                 if (!landType) return '';
                 const normalized = landType.toLowerCase().trim();
@@ -2710,7 +2714,7 @@ Cơ quan cấp:……., ngày…..tháng…..năm…..
                     }
 
                 } else {
-                    // --- Tải Mới từ QSDĐ (Logic cũ) ---
+                    // --- Tải Mới từ QSDĐ (LOGIC MỚI THEO YÊU CẦU) ---
                     if (!profile.qsddRecords || profile.qsddRecords.length === 0) {
                         valuationTableContainer.innerHTML = '<p class="text-gray-500 text-center">Chưa có thông tin Quyền sử dụng đất để định giá.</p>';
                         return;
@@ -2889,9 +2893,9 @@ Cơ quan cấp:……., ngày…..tháng…..năm…..
 
             resetBtn_QSDD.addEventListener('click', resetUI_QSDD);
 
-            async function callGeminiVisionAPI(base64Data) {
+            async function callGeminiVisionAPI(base64Data, apiKey) {
                 // Sửa lỗi API URL
-                const API_URL = '/api/gemini-qsdd';
+                const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
                 
                 // Cập nhật prompt với quy tắc mới nhất
                 const prompt = `Bạn là một trợ lý AI chuyên nghiệp, nhiệm vụ của bạn là phân tích hình ảnh Giấy chứng nhận Quyền sử dụng đất (GCN) của Việt Nam và trả về một đối tượng JSON DUY NHẤT.
@@ -2922,7 +2926,7 @@ Cơ quan cấp:……., ngày…..tháng…..năm…..
 * Tất cả các trường phải nằm trong MỘT đối tượng JSON duy nhất.
 * Nếu không tìm thấy thông tin cho một trường, hãy trả về một chuỗi rỗng "".`;
                 
-                const payload = { base64Data: base64Data };
+                const payload = { contents: [{ parts: [{ text: prompt }, { inline_data: { mime_type: "image/jpeg", data: base64Data } }] }] };
                 
                 try {
                     const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
@@ -2946,20 +2950,17 @@ Cơ quan cấp:……., ngày…..tháng…..năm…..
                         }
                         // --- END FIX ---
                         const errorMessage = errorBody.error?.message || response.statusText;
-                       throw new Error(`Lỗi từ API: ${errorMessage}`);
+                        if (errorMessage.includes('API key not valid')) { throw new Error('API Key không hợp lệ hoặc đã hết hạn.'); }
+                        throw new Error(`Lỗi từ API: ${errorMessage}`);
                     }
                     
                     // --- START FIX: Parse từ text đã lấy ---
                     const result = JSON.parse(responseBodyText);
                     // --- END FIX ---
                     
-                  
-			const rawText = result.text; // Lấy text trực tiếp từ phản hồi của server
-			if (!rawText) {
-    			throw new Error("Phản hồi từ API không có nội dung hợp lệ (QSDĐ).");
-			}
-			// Server đã xử lý, chỉ cần trả về
-			return rawText;
+                    if (!result.candidates || !result.candidates[0].content.parts[0].text) { throw new Error("Phản hồi từ API không có nội dung hợp lệ."); }
+                    const rawText = result.candidates[0].content.parts[0].text;
+                    return rawText.replace(/```json/g, '').replace(/```/g, '').trim();
                 } catch(e) {
                     throw new Error(`Không thể kết nối đến API. Lỗi: ${e.message}`);
                 }
@@ -3050,6 +3051,7 @@ Cơ quan cấp:……., ngày…..tháng…..năm…..
             }
 
             extractBtn_QSDD.addEventListener('click', async () => {
+                const apiKey = GEMINI_API_KEY;
 
                 statusDiv_QSDD.classList.remove('hidden');
                 statusBox_QSDD.className = 'flex items-center justify-center bg-blue-50 p-3 rounded-lg text-blue-800';
@@ -3064,7 +3066,7 @@ Cơ quan cấp:……., ngày…..tháng…..năm…..
                     statusText_QSDD.textContent = `Đang phân tích ảnh ${i + 1}/${imageFiles_QSDD.length}: ${file.name}...`;
                     try {
                         const base64Data = await fileToBase64(file);
-                        const responseText = await callGeminiVisionAPI(base64Data);
+                        const responseText = await callGeminiVisionAPI(base64Data, apiKey);
                         const data = JSON.parse(responseText);
                         successfulResults.push({ fileName: file.name, data: data });
                     } catch (error) {
